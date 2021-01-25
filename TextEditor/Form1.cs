@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 
 namespace TextEditor
 {
@@ -14,6 +15,7 @@ namespace TextEditor
     {
         const int LEADING_SPACE = 12;
         const int CLOSE_AREA = 30;
+        int MaxTabWidth = 200;
         public Form1()
         {
             InitializeComponent();
@@ -47,15 +49,43 @@ namespace TextEditor
                 Rectangle closeButton = new Rectangle(r.Right - CLOSE_AREA, r.Top + 4, 30, 30);
                 if (closeButton.Contains(e.Location))
                 {
-                    if (MessageBox.Show("Would you like to Save before close this Tab?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    var result = MessageBox.Show($"Would you like to Save {tabControl1.TabPages[i].Text} before close this Tab?", "Confirm", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                    if (result == DialogResult.Yes)
                     {
                         this.tabControl1.TabPages.RemoveAt(i);
                         break;
-
+                    }
+                    else if (result == DialogResult.No)
+                    {
+                        this.tabControl1.TabPages.RemoveAt(i);
+                        break;
                     }
                 }
             }
         }
+        private void RefreshTabSize(string FileName)
+        {
+            if (FileName.Length * 15 > MaxTabWidth)
+                MaxTabWidth = FileName.Length * 15;
+            this.tabControl1.ItemSize = new Size(MaxTabWidth, 36);
+        }
 
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+            saveFileDialog1.Filter = "Text Files | *.txt";
+            saveFileDialog1.Title = "Create an Text File";
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                using (StreamWriter sw = new StreamWriter(saveFileDialog1.FileName))
+                {
+                    sw.Close();
+                }
+                string fileName = saveFileDialog1.FileName.Substring(saveFileDialog1.FileName.LastIndexOf(Path.DirectorySeparatorChar) + 1);
+                TabPage newTab = new TabPage(fileName);
+                this.tabControl1.TabPages.Add(newTab);
+                RefreshTabSize(fileName);
+            }
+        }
     }
 }
