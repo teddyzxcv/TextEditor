@@ -25,21 +25,24 @@ namespace TextEditor
             {
                 this.tabControl1.TabPages.Add(CreateNewTab(FileDialog1.FileName));
                 tabControl1.SelectTab(tabControl1.TabCount - 1);
-                var sr = new StreamReader(FileDialog1.FileName);
-                tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Text = sr.ReadToEnd();
-                sr.Close();
+                if (FileDialog1.FileName.Substring(FileDialog1.FileName.LastIndexOf('.')) == ".rtf")
+                    tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().LoadFile(FileDialog1.FileName, RichTextBoxStreamType.RichText);
+                else
+                    tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Text = File.ReadAllText(FileDialog1.FileName);
             }
         }
         private void OpenFile(string Path)
         {
+            if (File.Exists(Path))
+            {
+                this.tabControl1.TabPages.Add(CreateNewTab(Path));
+                tabControl1.SelectTab(tabControl1.TabCount - 1);
+                if (Path.Substring(Path.LastIndexOf('.')) == ".rtf")
 
-
-            this.tabControl1.TabPages.Add(CreateNewTab(Path));
-            tabControl1.SelectTab(tabControl1.TabCount - 1);
-            var sr = new StreamReader(Path);
-            tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Text = sr.ReadToEnd();
-            sr.Close();
-
+                    tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().LoadFile(Path, RichTextBoxStreamType.RichText);
+                else
+                    tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Text = File.ReadAllText(Path);
+            }
         }
 
         private void SaveFile(SaveFileDialog sfd)
@@ -47,20 +50,20 @@ namespace TextEditor
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                using (StreamWriter sw = new StreamWriter(sfd.FileName))
-                {
-                    sw.Write(tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Text);
-                    sw.Close();
-                }
+                if (tabControl1.SelectedTab.Text.Substring(tabControl1.SelectedTab.Text.LastIndexOf('.')) == ".rtf")
+                    tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SaveFile(sfd.FileName, RichTextBoxStreamType.RichText);
+                else
+                    tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SaveFile(sfd.FileName, RichTextBoxStreamType.PlainText);
+
+
             }
         }
         private void SaveFile()
         {
-            using (StreamWriter sw = new StreamWriter(tabPages[tabControl1.SelectedIndex].PathToFile))
-            {
-                sw.Write(tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Text);
-                sw.Close();
-            }
+            if (tabControl1.SelectedTab.Text.Substring(tabControl1.SelectedTab.Text.LastIndexOf('.')) == ".rtf")
+                tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SaveFile(tabPages[tabControl1.SelectedIndex].PathToFile, RichTextBoxStreamType.RichText);
+            else
+                tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SaveFile(tabPages[tabControl1.SelectedIndex].PathToFile, RichTextBoxStreamType.PlainText);
         }
         private void RefreshTabSize(string FileName)
         {
@@ -72,6 +75,17 @@ namespace TextEditor
         {
             int MaxTabWidth = TabWidthList.Max();
             this.tabControl1.ItemSize = new Size(MaxTabWidth, 36);
+        }
+        private void SaveAll()
+        {
+            for (int i = 0; i < this.tabControl1.TabPages.Count; i++)
+            {
+                using (StreamWriter sw = new StreamWriter(tabPages[tabControl1.SelectedIndex].PathToFile))
+                {
+                    sw.Write(tabControl1.TabPages[i].Controls.OfType<RichTextBox>().Last().Text);
+                    sw.Close();
+                }
+            }
         }
         private TabPage CreateNewTab(string FileName)
         {
@@ -85,6 +99,7 @@ namespace TextEditor
             newTextBox.Size = new System.Drawing.Size(946, 593);
             newTextBox.TabIndex = 0;
             newTextBox.Text = "";
+            newTextBox.Font = new Font("Arial", 15, FontStyle.Regular);
             newTab.Controls.Add(newTextBox);
             RefreshTabSize(fileName);
             TabF newT = new TabF();

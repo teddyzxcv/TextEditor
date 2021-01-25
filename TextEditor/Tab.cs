@@ -17,6 +17,7 @@ namespace TextEditor
         public bool SaveOrNot { get; set; }
 
         public TabPage Page { get; set; }
+        public Font tabFont { get; set; }
 
 
     }
