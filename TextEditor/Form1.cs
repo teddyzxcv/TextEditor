@@ -22,10 +22,11 @@ namespace TextEditor
         public Form1()
         {
             InitializeComponent();
-            this.Text = "Window1";
             this.MinimumSize = new Size(Screen.PrimaryScreen.WorkingArea.Size.Width / 2, Screen.PrimaryScreen.WorkingArea.Size.Height / 2);
             this.MaximumSize = Screen.PrimaryScreen.WorkingArea.Size;
             SetSetting();
+            this.Text = tabControl1.SelectedTab.Text;
+
             timer1.Start();
 
         }
@@ -308,6 +309,14 @@ namespace TextEditor
             fd.ShowDialog();
             tabPages[tabControl1.SelectedIndex].tabFont = fd.Font;
             tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Font = fd.Font;
+        }
+
+        private void tabControl1_Selected(object sender, TabControlEventArgs e)
+        {
+            if (tabControl1.SelectedTab != null)
+                this.Text = tabControl1.SelectedTab.Text;
+            else
+                this.Text = "";
         }
     }
 }

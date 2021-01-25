@@ -107,6 +107,7 @@ namespace TextEditor
             newT.Page = newTab;
             newT.SaveOrNot = true;
             tabPages.Add(newT);
+            this.Text = fileName;
             return newTab;
         }
     }
