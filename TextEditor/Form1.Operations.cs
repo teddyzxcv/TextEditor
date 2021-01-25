@@ -30,6 +30,18 @@ namespace TextEditor
                 sr.Close();
             }
         }
+        private void OpenFile(string Path)
+        {
+
+
+            this.tabControl1.TabPages.Add(CreateNewTab(Path));
+            tabControl1.SelectTab(tabControl1.TabCount - 1);
+            var sr = new StreamReader(Path);
+            tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Text = sr.ReadToEnd();
+            sr.Close();
+
+        }
+
         private void SaveFile(SaveFileDialog sfd)
         {
 

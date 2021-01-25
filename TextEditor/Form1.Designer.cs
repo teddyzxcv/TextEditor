@@ -236,6 +236,7 @@
             this.SettingToolStripMenuItem1.Name = "SettingToolStripMenuItem1";
             this.SettingToolStripMenuItem1.Size = new System.Drawing.Size(116, 35);
             this.SettingToolStripMenuItem1.Text = "Setting";
+            this.SettingToolStripMenuItem1.Click += new System.EventHandler(this.SettingToolStripMenuItem1_Click);
             // 
             // splitContainer1
             // 
@@ -319,6 +320,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "Form";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);

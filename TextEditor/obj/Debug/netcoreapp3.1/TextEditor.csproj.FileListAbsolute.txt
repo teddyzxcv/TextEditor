@@ -13,3 +13,4 @@ C:\Users\teddyzxcv\Documents\GitHub\TextEditor\TextEditor\obj\Debug\netcoreapp3.
 C:\Users\teddyzxcv\Documents\GitHub\TextEditor\TextEditor\obj\Debug\netcoreapp3.1\TextEditor.dll
 C:\Users\teddyzxcv\Documents\GitHub\TextEditor\TextEditor\obj\Debug\netcoreapp3.1\TextEditor.pdb
 C:\Users\teddyzxcv\Documents\GitHub\TextEditor\TextEditor\obj\Debug\netcoreapp3.1\TextEditor.genruntimeconfig.cache
+C:\Users\teddyzxcv\Documents\GitHub\TextEditor\TextEditor\obj\Debug\netcoreapp3.1\TextEditor.SettingForm.resources

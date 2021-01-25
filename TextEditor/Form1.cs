@@ -24,6 +24,8 @@ namespace TextEditor
             this.Text = "Window1";
             this.MinimumSize = new Size(Screen.PrimaryScreen.WorkingArea.Size.Width / 2, Screen.PrimaryScreen.WorkingArea.Size.Height / 2);
             this.MaximumSize = Screen.PrimaryScreen.WorkingArea.Size;
+            OpenFile("Intro.txt");
+
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -112,7 +114,41 @@ namespace TextEditor
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.Close();
+            SaveBeforeClose();
+        }
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SaveBeforeClose();
+        }
+        private void SaveBeforeClose()
+        {
+            int i = 0;
+            while (tabControl1.TabPages.Count != 0)
+            {
+                var result = MessageBox.Show($"Would you like to Save {tabControl1.TabPages[i].Text} before close this Tab?", "Confirm", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                if (result == DialogResult.Yes)
+                {
+                    TabWidthList.Remove(this.tabControl1.TabPages[i].Text.Length * 18);
+                    SaveFile();
+                    tabPages.RemoveAt(i);
+                    this.tabControl1.TabPages.RemoveAt(i);
+                    RefreshTabSize();
+                }
+                else if (result == DialogResult.No)
+                {
+                    TabWidthList.Remove(this.tabControl1.TabPages[i].Text.Length * 18);
+                    this.tabControl1.TabPages.RemoveAt(i);
+                    tabPages.RemoveAt(i);
+                    RefreshTabSize();
+                }
+            }
+        }
+
+        private void SettingToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            SettingForm st = new SettingForm();
+            st.ShowDialog();
         }
     }
 }
+
