@@ -15,12 +15,15 @@ namespace TextEditor
     {
         const int LEADING_SPACE = 12;
         const int CLOSE_AREA = 30;
-        int MaxTabWidth = 200;
+
+
+        List<int> TabWidthList = new List<int>() { 200 };
         public Form1()
         {
             InitializeComponent();
             this.Text = "Window1";
-
+            this.MinimumSize = new Size(Screen.PrimaryScreen.WorkingArea.Size.Width / 2, Screen.PrimaryScreen.WorkingArea.Size.Height / 2);
+            this.MaximumSize = Screen.PrimaryScreen.WorkingArea.Size;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -41,6 +44,7 @@ namespace TextEditor
 
         private void tabControl1_MouseDown(object sender, MouseEventArgs e)
         {
+
             for (int i = 0; i < this.tabControl1.TabPages.Count; i++)
             {
                 Rectangle r = tabControl1.GetTabRect(i);
@@ -52,28 +56,29 @@ namespace TextEditor
                     var result = MessageBox.Show($"Would you like to Save {tabControl1.TabPages[i].Text} before close this Tab?", "Confirm", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                     if (result == DialogResult.Yes)
                     {
+                        TabWidthList.Remove(this.tabControl1.TabPages[i].Text.Length * 18);
+                        SaveFile();
+                        tabPages.RemoveAt(i);
                         this.tabControl1.TabPages.RemoveAt(i);
+                        RefreshTabSize();
+
                         break;
                     }
                     else if (result == DialogResult.No)
                     {
+                        TabWidthList.Remove(this.tabControl1.TabPages[i].Text.Length * 18);
                         this.tabControl1.TabPages.RemoveAt(i);
+                        tabPages.RemoveAt(i);
+                        RefreshTabSize();
                         break;
                     }
                 }
             }
         }
-        private void RefreshTabSize(string FileName)
-        {
-            if (FileName.Length * 15 > MaxTabWidth)
-                MaxTabWidth = FileName.Length * 15;
-            this.tabControl1.ItemSize = new Size(MaxTabWidth, 36);
-        }
-
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SaveFileDialog saveFileDialog1 = new SaveFileDialog();
-            saveFileDialog1.Filter = "Text Files | *.txt";
+            saveFileDialog1.Filter = "Text Files | *.txt | RTF Files | *.rtf";
             saveFileDialog1.Title = "Create an Text File";
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
@@ -81,11 +86,33 @@ namespace TextEditor
                 {
                     sw.Close();
                 }
-                string fileName = saveFileDialog1.FileName.Substring(saveFileDialog1.FileName.LastIndexOf(Path.DirectorySeparatorChar) + 1);
-                TabPage newTab = new TabPage(fileName);
-                this.tabControl1.TabPages.Add(newTab);
-                RefreshTabSize(fileName);
+                string fileName = saveFileDialog1.FileName;
+                this.tabControl1.TabPages.Add(CreateNewTab(fileName));
+
             }
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFile();
+        }
+
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+            saveFileDialog1.Filter = "Text Files | *.txt | RTF Files | *.rtf";
+            saveFileDialog1.Title = $"Save {tabControl1.SelectedTab.Text}";
+            SaveFile(saveFileDialog1);
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFile();
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }
