@@ -29,6 +29,7 @@ namespace TextEditor
             Configuration cfg = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
             cfg.AppSettings.Settings["AutosaveTime"].Value = this.numericUpDown1.Value.ToString();
             cfg.AppSettings.Settings["ThemeColor"].Value = this.comboBox1.SelectedItem.ToString();
+            cfg.AppSettings.Settings["TimeMachine"].Value = this.TimeMachineUpDown2.Value.ToString();
             cfg.Save(ConfigurationSaveMode.Modified);
             ConfigurationManager.RefreshSection("appSettings");
             this.Close();
@@ -38,6 +39,8 @@ namespace TextEditor
             this.numericUpDown1.Value = int.Parse(ConfigurationManager.AppSettings["AutosaveTime"]);
             //this.comboBox1.SelectedItem = AllSetting[1].Split(' ')[2];
             this.comboBox1.SelectedItem = ConfigurationManager.AppSettings["ThemeColor"];
+
+            this.TimeMachineUpDown2.Value = int.Parse(ConfigurationManager.AppSettings["TimeMachine"]);
 
         }
 

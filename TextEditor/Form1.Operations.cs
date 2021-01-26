@@ -144,7 +144,7 @@ namespace TextEditor
             {
                 try
                 {
-                    if (tabControl1.TabPages[i].Text.Substring(tabControl1.SelectedTab.Text.LastIndexOf('.')) == ".rtf")
+                    if (tabControl1.TabPages[i].Text.Substring(tabControl1.TabPages[i].Text.LastIndexOf('.')) == ".rtf")
                         tabControl1.TabPages[i].Controls.OfType<RichTextBox>().Last().SaveFile(tabPages[i].PathToFile, RichTextBoxStreamType.RichText);
                     else
                         tabControl1.TabPages[i].Controls.OfType<RichTextBox>().Last().SaveFile(tabPages[i].PathToFile, RichTextBoxStreamType.PlainText);
@@ -155,6 +155,8 @@ namespace TextEditor
                 }
             }
         }
+
+
         private TabPage CreateNewTab(string FileName)
         {
             string fileName = FileName.Substring(FileName.LastIndexOf(Path.DirectorySeparatorChar) + 1);
@@ -203,6 +205,7 @@ namespace TextEditor
             try
             {
                 this.timer1.Interval = int.Parse(ConfigurationManager.AppSettings["AutosaveTime"]) * 60000;
+                this.timer2.Interval = int.Parse(ConfigurationManager.AppSettings["TimeMachine"]) * 1000;
                 ColorTheme = ConfigurationManager.AppSettings["ThemeColor"];
             }
             catch
@@ -354,5 +357,6 @@ namespace TextEditor
                 }
             }
         }
+
     }
 }

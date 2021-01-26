@@ -53,6 +53,7 @@
             this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.FromatToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.SettingToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.TimeMachineStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.Sbutton = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
@@ -71,6 +72,7 @@
             this.RUnderStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.RStrikeStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -86,7 +88,8 @@
             this.fileToolStripMenuItem,
             this.editToolStripMenuItem,
             this.FromatToolStripMenuItem1,
-            this.SettingToolStripMenuItem1});
+            this.SettingToolStripMenuItem1,
+            this.TimeMachineStripMenuItem1});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
@@ -279,6 +282,13 @@
             this.SettingToolStripMenuItem1.Text = "Setting";
             this.SettingToolStripMenuItem1.Click += new System.EventHandler(this.SettingToolStripMenuItem1_Click);
             // 
+            // TimeMachineStripMenuItem1
+            // 
+            this.TimeMachineStripMenuItem1.Name = "TimeMachineStripMenuItem1";
+            this.TimeMachineStripMenuItem1.Size = new System.Drawing.Size(188, 35);
+            this.TimeMachineStripMenuItem1.Text = "TimeMachine";
+            this.TimeMachineStripMenuItem1.Click += new System.EventHandler(this.TimeMachineStripMenuItem1_Click);
+            // 
             // splitContainer1
             // 
             this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -459,6 +469,10 @@
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // timer2
+            // 
+            this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(14F, 31F);
@@ -525,6 +539,8 @@
         private System.Windows.Forms.ToolStripMenuItem RUnderStripMenuItem3;
         private System.Windows.Forms.ToolStripMenuItem RStrikeStripMenuItem4;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
+        private System.Windows.Forms.Timer timer2;
+        private System.Windows.Forms.ToolStripMenuItem TimeMachineStripMenuItem1;
     }
 }
 

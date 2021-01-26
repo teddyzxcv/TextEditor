@@ -34,7 +34,10 @@
             this.SaveButton = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.TimeMachineUpDown2 = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.TimeMachineUpDown2)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -109,6 +112,37 @@
             this.comboBox1.Size = new System.Drawing.Size(235, 39);
             this.comboBox1.TabIndex = 6;
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(50, 187);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(534, 31);
+            this.label4.TabIndex = 7;
+            this.label4.Text = "TimeMachine save files every               minute";
+            // 
+            // TimeMachineUpDown2
+            // 
+            this.TimeMachineUpDown2.Location = new System.Drawing.Point(405, 187);
+            this.TimeMachineUpDown2.Maximum = new decimal(new int[] {
+            60,
+            0,
+            0,
+            0});
+            this.TimeMachineUpDown2.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.TimeMachineUpDown2.Name = "TimeMachineUpDown2";
+            this.TimeMachineUpDown2.Size = new System.Drawing.Size(76, 38);
+            this.TimeMachineUpDown2.TabIndex = 8;
+            this.TimeMachineUpDown2.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
             // SettingForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(14F, 31F);
@@ -116,6 +150,8 @@
             this.AutoSize = true;
             this.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.ClientSize = new System.Drawing.Size(778, 665);
+            this.Controls.Add(this.TimeMachineUpDown2);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.SaveButton);
@@ -126,6 +162,7 @@
             this.Text = "Setting";
             this.Load += new System.EventHandler(this.SettingForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.TimeMachineUpDown2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -139,5 +176,7 @@
         private System.Windows.Forms.Button SaveButton;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.NumericUpDown TimeMachineUpDown2;
     }
 }

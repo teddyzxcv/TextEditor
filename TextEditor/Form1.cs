@@ -17,6 +17,7 @@ namespace TextEditor
         const int LEADING_SPACE = 12;
         const int CLOSE_AREA = 30;
         List<int> TabWidthList = new List<int>() { 200 };
+        List<FileJournal> filejournal = FileJournal.LoadFileInfo();
 
         string ColorTheme = "Light";
         public Form1()
@@ -31,6 +32,7 @@ namespace TextEditor
             else
                 this.Text = string.Empty;
             timer1.Start();
+            timer2.Start();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -241,6 +243,40 @@ namespace TextEditor
         private void RUnderStripMenuItem3_Click(object sender, EventArgs e)
         {
             UnderlineSelection();
+        }
+
+        private void timer2_Tick(object sender, EventArgs e)
+        {
+            filejournal = FileJournal.LoadFileInfo();
+            string PathToJournal = Path.GetRelativePath("TextEditor\\bin\\Debug\\netcoreapp3.1", "TextEditor\\Journal");
+            for (int i = 0; i < this.tabControl1.TabPages.Count; i++)
+            {
+                try
+                {
+                    if (filejournal.Select(e => e.filePosition).ToList().Contains(tabPages[i].PathToFile))
+                        if (tabControl1.TabPages[i].Text.Substring(tabControl1.TabPages[i].Text.LastIndexOf('.')) == ".rtf")
+                            tabControl1.TabPages[i].Controls.OfType<RichTextBox>().Last().SaveFile(tabPages[i].PathToFile, RichTextBoxStreamType.RichText);
+                        else
+                            tabControl1.TabPages[i].Controls.OfType<RichTextBox>().Last().SaveFile(tabPages[i].PathToFile, RichTextBoxStreamType.PlainText);
+                    else
+                    {
+                        string folderName = FileJournal.RandomString();
+                        Directory.CreateDirectory(Path.Combine(PathToJournal, folderName));
+
+                    }
+                }
+                catch
+                {
+                    var result = MessageBox.Show($"File {tabPages[i].PathToFile} can not be saved for some reason, try other file", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void TimeMachineStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            TimeMachineForm tmf = new TimeMachineForm();
+            tmf.ShowDialog();
+
         }
     }
 }
