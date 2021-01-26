@@ -25,10 +25,12 @@ namespace TextEditor
             this.MinimumSize = new Size(Screen.PrimaryScreen.WorkingArea.Size.Width / 2, Screen.PrimaryScreen.WorkingArea.Size.Height / 2);
             this.MaximumSize = Screen.PrimaryScreen.WorkingArea.Size;
             SetSetting();
-            this.Text = tabControl1.SelectedTab.Text;
-
+            OpenOldFile();
+            if (tabControl1.TabCount != 0)
+                this.Text = tabControl1.SelectedTab.Text;
+            else
+                this.Text = string.Empty;
             timer1.Start();
-
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -120,75 +122,13 @@ namespace TextEditor
         {
             SaveBeforeClose();
         }
-        private void SaveBeforeClose()
-        {
-            File.AppendAllLines("Setting.conf", tabPages.Select(e => e.PathToFile));
-            while (tabControl1.TabPages.Count != 0)
-            {
-                var result = MessageBox.Show($"Would you like to Save {tabControl1.TabPages[0].Text} before close this Tab?", "Confirm", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-                if (result == DialogResult.Yes)
-                {
-                    TabWidthList.Remove(this.tabControl1.TabPages[0].Text.Length * 18);
-                    SaveFile();
-                    tabPages.RemoveAt(0);
-                    this.tabControl1.TabPages.RemoveAt(0);
-                    RefreshTabSize();
-                }
-                else if (result == DialogResult.No)
-                {
-                    TabWidthList.Remove(this.tabControl1.TabPages[0].Text.Length * 18);
-                    this.tabControl1.TabPages.RemoveAt(0);
-                    tabPages.RemoveAt(0);
-                    RefreshTabSize();
-                }
-            }
-
-        }
-
         private void SettingToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             SettingForm st = new SettingForm();
             st.ShowDialog();
             SetSetting();
         }
-        private void SetSetting()
-        {
-            List<string> AllSetting = new List<string>(File.ReadAllLines("Setting.conf"));
-            try
-            {
-                this.timer1.Interval = int.Parse(AllSetting[0].Split(' ')[2]) * 60000;
-                ColorTheme = AllSetting[1].Split(' ')[2];
-            }
-            catch
-            {
-                var result = MessageBox.Show("Incorrect setting! plz don't change file Setting.conf!!, Press OK to fix setting", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                if (result == DialogResult.OK)
-                {
-                    File.CreateText("Setting.conf").Close();
-                    this.Close();
-                }
-            }
-            switch (ColorTheme)
-            {
-                case ("Light"):
-                    menuStrip1.BackColor = Color.White;
-                    splitContainer1.Panel1.BackColor = Color.White;
-                    break;
-                case ("Dark"):
-                    menuStrip1.BackColor = Color.Gray;
-                    splitContainer1.Panel1.BackColor = Color.Gray;
-                    break;
-                case ("Red"):
-                    menuStrip1.BackColor = Color.OrangeRed;
-                    splitContainer1.Panel1.BackColor = Color.OrangeRed;
-                    break;
-            }
-            if (AllSetting.Count == 2 && tabControl1.TabCount == 0)
-                OpenFile("Intro.rtf");
-            else
-                AllSetting.GetRange(2, AllSetting.Count - 2).ForEach(OpenFile);
-            File.WriteAllLines("Setting.conf", AllSetting.GetRange(0, 2));
-        }
+
         private void timer1_Tick(object sender, EventArgs e)
         {
             SaveAll();
@@ -196,99 +136,22 @@ namespace TextEditor
 
         private void button1_Click_1(object sender, EventArgs e)
         {
-            if (tabControl1.SelectedTab != null)
-            {
-                Font f = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionFont;
-                FontStyle fs = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionFont.Style;
-                if (f.Bold)
-                {
-                    button1.BackColor = Color.White;
-                    fs &= ~FontStyle.Bold;
-                }
-                else
-                {
-                    button1.BackColor = Color.Gray;
-                    fs |= FontStyle.Bold;
-                }
-                if (tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionFont != null)
-                {
-                    tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionFont = new Font(f, fs);
-                }
-            }
+            BoldSelection();
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if (tabControl1.SelectedTab != null)
-            {
-                Font f = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionFont;
-                FontStyle fs = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionFont.Style;
-                if (f.Italic)
-                {
-                    button2.BackColor = Color.White;
-                    fs &= ~FontStyle.Italic;
-                }
-                else
-                {
-                    button2.BackColor = Color.Gray;
-                    fs |= FontStyle.Italic;
-                }
-                if (tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionFont != null)
-                {
-                    tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionFont = new Font(f, fs);
-                }
-
-            }
+            ItalicSelection();
         }
 
         private void Ubutton_Click(object sender, EventArgs e)
         {
-            if (tabControl1.SelectedTab != null)
-            {
-                Font f = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionFont;
-                FontStyle fs = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionFont.Style;
-                if (f.Underline)
-                {
-                    Ubutton.BackColor = Color.White;
-                    fs &= ~FontStyle.Underline;
-
-                }
-                else
-                {
-                    Ubutton.BackColor = Color.Gray;
-                    fs |= FontStyle.Underline;
-
-                }
-                if (tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionFont != null)
-                {
-                    tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionFont = new Font(f, fs);
-                }
-            }
+            UnderlineSelection();
         }
 
         private void SButton_Click(object sender, EventArgs e)
         {
-            if (tabControl1.SelectedTab != null)
-            {
-                Font f = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionFont;
-                FontStyle fs = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionFont.Style;
-                if (f.Strikeout)
-                {
-                    Sbutton.BackColor = Color.White;
-                    fs &= ~FontStyle.Strikeout;
-
-                }
-                else
-                {
-                    Sbutton.BackColor = Color.Gray;
-                    fs |= FontStyle.Strikeout;
-
-                }
-                if (tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionFont != null)
-                {
-                    tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionFont = new Font(f, fs);
-                }
-            }
+            StrikeoutSelection();
         }
 
         private void newWinStripMenuItem1_Click(object sender, EventArgs e)
@@ -317,6 +180,67 @@ namespace TextEditor
                 this.Text = tabControl1.SelectedTab.Text;
             else
                 this.Text = "";
+        }
+
+        private void cutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CutAct();
+
+        }
+
+        private void copyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CopyAct();
+        }
+
+        private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            PasteAct();
+        }
+
+        private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SelectAllAct();
+        }
+
+        private void RselectAllStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            SelectAllAct();
+        }
+
+        private void RPasteStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            PasteAct();
+        }
+
+        private void RCopyStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            CopyAct();
+        }
+
+        private void RCutStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            CutAct();
+        }
+
+        private void RBoldStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            BoldSelection();
+        }
+
+        private void RItalicStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            ItalicSelection();
+        }
+
+        private void RStrikeStripMenuItem4_Click(object sender, EventArgs e)
+        {
+            StrikeoutSelection();
+        }
+
+        private void RUnderStripMenuItem3_Click(object sender, EventArgs e)
+        {
+            UnderlineSelection();
         }
     }
 }

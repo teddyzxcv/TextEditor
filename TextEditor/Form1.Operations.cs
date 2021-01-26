@@ -1,4 +1,5 @@
 using System;
+using System.Configuration;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -21,49 +22,110 @@ namespace TextEditor
             FileDialog1.RestoreDirectory = true;
             FileDialog1.Filter = "Text Files | *.txt|RTF Files | *.rtf";
             FileDialog1.Title = "Open an Text File";
-            if (FileDialog1.ShowDialog() == DialogResult.OK)
+            try
             {
-                this.tabControl1.TabPages.Add(CreateNewTab(FileDialog1.FileName));
-                tabControl1.SelectTab(tabControl1.TabCount - 1);
-                if (FileDialog1.FileName.Substring(FileDialog1.FileName.LastIndexOf('.')) == ".rtf")
-                    tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().LoadFile(FileDialog1.FileName, RichTextBoxStreamType.RichText);
-                else
-                    tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Text = File.ReadAllText(FileDialog1.FileName);
+                if (FileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    this.tabControl1.TabPages.Add(CreateNewTab(FileDialog1.FileName));
+                    tabControl1.SelectTab(tabControl1.TabCount - 1);
+                    if (FileDialog1.FileName.Substring(FileDialog1.FileName.LastIndexOf('.')) == ".rtf")
+                        tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().LoadFile(FileDialog1.FileName, RichTextBoxStreamType.RichText);
+                    else
+                        tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Text = File.ReadAllText(FileDialog1.FileName);
+                }
+            }
+            catch
+            {
+                var result = MessageBox.Show($"File {FileDialog1.FileName} can not be opened for some reason, try other file", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                tabPages.RemoveAt(tabControl1.TabCount - 1);
+                tabControl1.TabPages.RemoveAt(tabControl1.TabCount - 1);
+
             }
         }
         private void OpenFile(string Path)
         {
-            if (File.Exists(Path))
+            try
             {
-                this.tabControl1.TabPages.Add(CreateNewTab(Path));
-                tabControl1.SelectTab(tabControl1.TabCount - 1);
-                if (Path.Substring(Path.LastIndexOf('.')) == ".rtf")
+                if (File.Exists(Path))
+                {
+                    this.tabControl1.TabPages.Add(CreateNewTab(Path));
+                    tabControl1.SelectTab(tabControl1.TabCount - 1);
+                    if (Path.Substring(Path.LastIndexOf('.')) == ".rtf")
 
-                    tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().LoadFile(Path, RichTextBoxStreamType.RichText);
-                else
-                    tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Text = File.ReadAllText(Path);
+                        tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().LoadFile(Path, RichTextBoxStreamType.RichText);
+                    else
+                        tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Text = File.ReadAllText(Path);
+                }
+            }
+            catch
+            {
+                var result = MessageBox.Show($"File {Path} can not be opened for some reason, try other file", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                tabPages.RemoveAt(tabControl1.TabCount - 1);
+                tabControl1.TabPages.RemoveAt(tabControl1.TabCount - 1);
             }
         }
 
         private void SaveFile(SaveFileDialog sfd)
         {
-
-            if (sfd.ShowDialog() == DialogResult.OK)
+            try
             {
-                if (tabControl1.SelectedTab.Text.Substring(tabControl1.SelectedTab.Text.LastIndexOf('.')) == ".rtf")
-                    tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SaveFile(sfd.FileName, RichTextBoxStreamType.RichText);
-                else
-                    tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SaveFile(sfd.FileName, RichTextBoxStreamType.PlainText);
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    if (tabControl1.SelectedTab.Text.Substring(tabControl1.SelectedTab.Text.LastIndexOf('.')) == ".rtf")
+                        tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SaveFile(sfd.FileName, RichTextBoxStreamType.RichText);
+                    else
+                        tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SaveFile(sfd.FileName, RichTextBoxStreamType.PlainText);
 
 
+                }
             }
+            catch
+            {
+                var result = MessageBox.Show($"File {sfd.FileName} can not be opened for some reason, try other file", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        private void SaveBeforeClose()
+        {
+            //tabPages.Select(e => e.PathToFile)
+            Configuration cfg = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            cfg.AppSettings.Settings["OldPaths"].Value = String.Join('|', tabPages.Select(e => e.PathToFile));
+            cfg.Save(ConfigurationSaveMode.Modified);
+            ConfigurationManager.RefreshSection("appSettings");
+            while (tabControl1.TabPages.Count != 0)
+            {
+                var result = MessageBox.Show($"Would you like to Save {tabControl1.TabPages[0].Text} before close this Tab?", "Confirm", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                if (result == DialogResult.Yes)
+                {
+                    TabWidthList.Remove(this.tabControl1.TabPages[0].Text.Length * 18);
+                    SaveFile();
+                    tabPages.RemoveAt(0);
+                    this.tabControl1.TabPages.RemoveAt(0);
+                    RefreshTabSize();
+                }
+                else if (result == DialogResult.No)
+                {
+                    TabWidthList.Remove(this.tabControl1.TabPages[0].Text.Length * 18);
+                    this.tabControl1.TabPages.RemoveAt(0);
+                    tabPages.RemoveAt(0);
+                    RefreshTabSize();
+                }
+            }
+
         }
         private void SaveFile()
         {
-            if (tabControl1.SelectedTab.Text.Substring(tabControl1.SelectedTab.Text.LastIndexOf('.')) == ".rtf")
-                tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SaveFile(tabPages[tabControl1.SelectedIndex].PathToFile, RichTextBoxStreamType.RichText);
-            else
-                tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SaveFile(tabPages[tabControl1.SelectedIndex].PathToFile, RichTextBoxStreamType.PlainText);
+            try
+            {
+                if (tabControl1.SelectedTab.Text.Substring(tabControl1.SelectedTab.Text.LastIndexOf('.')) == ".rtf")
+                    tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SaveFile(tabPages[tabControl1.SelectedIndex].PathToFile, RichTextBoxStreamType.RichText);
+                else
+                    tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SaveFile(tabPages[tabControl1.SelectedIndex].PathToFile, RichTextBoxStreamType.PlainText);
+            }
+            catch
+            {
+                var result = MessageBox.Show($"File {tabPages[tabControl1.SelectedIndex].PathToFile} can not be saved for some reason, try other file", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            }
         }
         private void RefreshTabSize(string FileName)
         {
@@ -80,10 +142,16 @@ namespace TextEditor
         {
             for (int i = 0; i < this.tabControl1.TabPages.Count; i++)
             {
-                using (StreamWriter sw = new StreamWriter(tabPages[tabControl1.SelectedIndex].PathToFile))
+                try
                 {
-                    sw.Write(tabControl1.TabPages[i].Controls.OfType<RichTextBox>().Last().Text);
-                    sw.Close();
+                    if (tabControl1.TabPages[i].Text.Substring(tabControl1.SelectedTab.Text.LastIndexOf('.')) == ".rtf")
+                        tabControl1.TabPages[i].Controls.OfType<RichTextBox>().Last().SaveFile(tabPages[i].PathToFile, RichTextBoxStreamType.RichText);
+                    else
+                        tabControl1.TabPages[i].Controls.OfType<RichTextBox>().Last().SaveFile(tabPages[i].PathToFile, RichTextBoxStreamType.PlainText);
+                }
+                catch
+                {
+                    var result = MessageBox.Show($"File {tabPages[i].PathToFile} can not be saved for some reason, try other file", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -100,6 +168,7 @@ namespace TextEditor
             newTextBox.TabIndex = 0;
             newTextBox.Text = "";
             newTextBox.Font = new Font("Arial", 15, FontStyle.Regular);
+            newTextBox.ContextMenuStrip = contextMenuStrip1;
             newTab.Controls.Add(newTextBox);
             RefreshTabSize(fileName);
             TabF newT = new TabF();
@@ -109,6 +178,181 @@ namespace TextEditor
             tabPages.Add(newT);
             this.Text = fileName;
             return newTab;
+        }
+        private void OpenOldFile()
+        {
+            try
+            {
+                if (ConfigurationManager.AppSettings["OldPaths"].Length != 0)
+                    foreach (var item in ConfigurationManager.AppSettings["OldPaths"].Split('|').ToList<string>())
+                    {
+                        if (File.Exists(item))
+                            OpenFile(item);
+                    }
+                // ConfigurationManager.AppSettings["OldPaths"].Split('|').ToList<string>().ForEach(OpenFile);
+                else
+                    OpenFile("Welcome.rtf");
+            }
+            catch
+            {
+
+            }
+        }
+        private void SetSetting()
+        {
+            try
+            {
+                this.timer1.Interval = int.Parse(ConfigurationManager.AppSettings["AutosaveTime"]) * 60000;
+                ColorTheme = ConfigurationManager.AppSettings["ThemeColor"];
+            }
+            catch
+            {
+                var result = MessageBox.Show("Incorrect setting! plz don't change file App.config!!, Press OK to fix setting", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            switch (ColorTheme)
+            {
+                case ("Light"):
+                    menuStrip1.BackColor = Color.White;
+                    splitContainer1.Panel1.BackColor = Color.White;
+                    break;
+                case ("Dark"):
+                    menuStrip1.BackColor = Color.Gray;
+                    splitContainer1.Panel1.BackColor = Color.Gray;
+                    break;
+                case ("Red"):
+                    menuStrip1.BackColor = Color.OrangeRed;
+                    splitContainer1.Panel1.BackColor = Color.OrangeRed;
+                    break;
+            }
+        }
+        private void CutAct()
+        {
+            RichTextBox rb = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last();
+            if (rb.SelectedText != string.Empty)
+                Clipboard.SetData(DataFormats.Text, rb.SelectedText);
+            rb.SelectedText = string.Empty;
+        }
+        private void CopyAct()
+        {
+            RichTextBox rb = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last();
+            if (rb.SelectedText != string.Empty)
+                Clipboard.SetData(DataFormats.Text, rb.SelectedText);
+
+        }
+        private void PasteAct()
+        {
+            RichTextBox rb = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last();
+            int position = rb.SelectionStart;
+            rb.Text = rb.Text.Insert(position, Clipboard.GetText());
+            rb.SelectionStart = position + Clipboard.GetText().Length;
+        }
+        private void SelectAllAct()
+        {
+            RichTextBox rb = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last();
+            rb.SelectAll();
+        }
+        private void BoldSelection()
+        {
+            if (tabControl1.SelectedTab != null)
+            {
+                Font f = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionFont;
+                FontStyle fs = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionFont.Style;
+                if (f.Bold)
+                {
+                    button1.BackColor = Color.White;
+                    RBoldStripMenuItem1.BackColor = Color.White;
+                    fs &= ~FontStyle.Bold;
+                }
+                else
+                {
+                    button1.BackColor = Color.Gray;
+                    RBoldStripMenuItem1.BackColor = Color.Gray;
+                    fs |= FontStyle.Bold;
+                }
+                if (tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionFont != null)
+                {
+                    tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionFont = new Font(f, fs);
+                }
+            }
+        }
+        private void ItalicSelection()
+        {
+            if (tabControl1.SelectedTab != null)
+            {
+                Font f = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionFont;
+                FontStyle fs = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionFont.Style;
+                if (f.Italic)
+                {
+                    button2.BackColor = Color.White;
+                    RItalicStripMenuItem2.BackColor = Color.White;
+                    fs &= ~FontStyle.Italic;
+                }
+                else
+                {
+                    button2.BackColor = Color.Gray;
+                    RItalicStripMenuItem2.BackColor = Color.Gray;
+
+                    fs |= FontStyle.Italic;
+                }
+                if (tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionFont != null)
+                {
+                    tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionFont = new Font(f, fs);
+                }
+
+            }
+        }
+        private void UnderlineSelection()
+        {
+            if (tabControl1.SelectedTab != null)
+            {
+                Font f = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionFont;
+                FontStyle fs = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionFont.Style;
+                if (f.Underline)
+                {
+                    Ubutton.BackColor = Color.White;
+                    RUnderStripMenuItem3.BackColor = Color.White;
+                    fs &= ~FontStyle.Underline;
+
+                }
+                else
+                {
+                    Ubutton.BackColor = Color.Gray;
+                    RUnderStripMenuItem3.BackColor = Color.Gray;
+
+                    fs |= FontStyle.Underline;
+
+                }
+                if (tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionFont != null)
+                {
+                    tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionFont = new Font(f, fs);
+                }
+            }
+        }
+
+        private void StrikeoutSelection()
+        {
+            if (tabControl1.SelectedTab != null)
+            {
+                Font f = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionFont;
+                FontStyle fs = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionFont.Style;
+                if (f.Strikeout)
+                {
+                    Sbutton.BackColor = Color.White;
+                    RStrikeStripMenuItem4.BackColor = Color.White;
+                    fs &= ~FontStyle.Strikeout;
+                }
+                else
+                {
+                    Sbutton.BackColor = Color.Gray;
+                    RStrikeStripMenuItem4.BackColor = Color.Gray;
+                    fs |= FontStyle.Strikeout;
+
+                }
+                if (tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionFont != null)
+                {
+                    tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionFont = new Font(f, fs);
+                }
+            }
         }
     }
 }
