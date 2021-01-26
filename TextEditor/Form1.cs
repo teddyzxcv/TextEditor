@@ -68,7 +68,6 @@ namespace TextEditor
                         tabPages.RemoveAt(i);
                         this.tabControl1.TabPages.RemoveAt(i);
                         RefreshTabSize();
-
                         break;
                     }
                     else if (result == DialogResult.No)
@@ -93,6 +92,7 @@ namespace TextEditor
                 File.CreateText(fileName).Close();
                 this.tabControl1.TabPages.Add(CreateNewTab(fileName));
             }
+            SaveAll();
             tabControl1.SelectTab(tabControl1.TabCount - 1);
         }
 

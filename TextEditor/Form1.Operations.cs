@@ -191,7 +191,7 @@ namespace TextEditor
                     }
                 // ConfigurationManager.AppSettings["OldPaths"].Split('|').ToList<string>().ForEach(OpenFile);
                 else
-                    OpenFile("Welcome.rtf");
+                    OpenFile("Help.rtf");
             }
             catch
             {
