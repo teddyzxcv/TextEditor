@@ -75,6 +75,7 @@
             this.listBox2.Name = "listBox2";
             this.listBox2.Size = new System.Drawing.Size(530, 450);
             this.listBox2.TabIndex = 0;
+            this.listBox2.DoubleClick += new System.EventHandler(this.listBox2_DoubleClick);
             // 
             // TimeMachineForm
             // 

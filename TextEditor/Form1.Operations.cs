@@ -205,7 +205,7 @@ namespace TextEditor
             try
             {
                 this.timer1.Interval = int.Parse(ConfigurationManager.AppSettings["AutosaveTime"]) * 60000;
-                this.timer2.Interval = int.Parse(ConfigurationManager.AppSettings["TimeMachine"]) * 1000;
+                this.timer2.Interval = int.Parse(ConfigurationManager.AppSettings["TimeMachine"]) * 60000;
                 ColorTheme = ConfigurationManager.AppSettings["ThemeColor"];
             }
             catch
@@ -330,6 +330,15 @@ namespace TextEditor
                     tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionFont = new Font(f, fs);
                 }
             }
+        }
+
+        private void ReopenAll()
+        {
+            List<TabF> listtab = new List<TabF>(tabPages);
+            tabControl1.TabPages.Clear();
+            tabPages.Clear();
+            listtab.Select(e => e.PathToFile).ToList().ForEach(OpenFile);
+
         }
 
         private void StrikeoutSelection()

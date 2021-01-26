@@ -253,14 +253,21 @@ namespace TextEditor
             {
                 try
                 {
+                    string fileName = tabControl1.TabPages[i].Text;
                     if (filejournal.Select(e => e.filePosition).ToList().Contains(tabPages[i].PathToFile))
-                        if (tabControl1.TabPages[i].Text.Substring(tabControl1.TabPages[i].Text.LastIndexOf('.')) == ".rtf")
-                            tabControl1.TabPages[i].Controls.OfType<RichTextBox>().Last().SaveFile(tabPages[i].PathToFile, RichTextBoxStreamType.RichText);
+                    {
+                        FileJournal.AddRecord(tabPages[i].PathToFile);
+                        string folderPath = Path.Combine(PathToJournal, filejournal.Find(e => e.filePosition == tabPages[i].PathToFile).folderName);
+                        folderPath = Path.Combine(folderPath, filejournal.Find(e => e.filePosition == tabPages[i].PathToFile).ChangeTime.Count.ToString());
+                        if (fileName.Substring(fileName.LastIndexOf('.')) == ".rtf")
+                            tabControl1.TabPages[i].Controls.OfType<RichTextBox>().Last().SaveFile(folderPath + ".rtf", RichTextBoxStreamType.RichText);
                         else
-                            tabControl1.TabPages[i].Controls.OfType<RichTextBox>().Last().SaveFile(tabPages[i].PathToFile, RichTextBoxStreamType.PlainText);
+                            tabControl1.TabPages[i].Controls.OfType<RichTextBox>().Last().SaveFile(folderPath + ".txt", RichTextBoxStreamType.PlainText);
+                    }
                     else
                     {
                         string folderName = FileJournal.RandomString();
+                        FileJournal.AddNewNode(tabPages[i].PathToFile, folderName, fileName);
                         Directory.CreateDirectory(Path.Combine(PathToJournal, folderName));
 
                     }
@@ -276,7 +283,7 @@ namespace TextEditor
         {
             TimeMachineForm tmf = new TimeMachineForm();
             tmf.ShowDialog();
-
+            ReopenAll();
         }
     }
 }
