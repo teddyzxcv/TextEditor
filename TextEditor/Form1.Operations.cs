@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+
 namespace TextEditor
 {
     partial class Form1
@@ -203,7 +204,7 @@ namespace TextEditor
                     }
                 // ConfigurationManager.AppSettings["OldPaths"].Split('|').ToList<string>().ForEach(OpenFile);
                 else
-                    OpenFile("Help.rtf");
+                    OpenFile("Helper.rtf");
             }
             catch
             {
@@ -376,6 +377,7 @@ namespace TextEditor
                     break;
                 case (".cs"):
                     rb.LoadFile(filepath, RichTextBoxStreamType.PlainText);
+
                     break;
             }
 

@@ -41,6 +41,12 @@
       },
       "frameworks": {
         "netcoreapp3.1": {
+          "dependencies": {
+            "FCTB": {
+              "target": "Package",
+              "version": "[2.16.24, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

@@ -19,6 +19,7 @@ namespace TextEditor
         //Do formatting
         public static List<string> GetFormatLineCode(List<string> code)
         {
+            bool InsideBigComment = false;
             for (int i = 0; i < code.Count; i++)
             {
                 string codeline = code[i].Trim();
@@ -26,8 +27,28 @@ namespace TextEditor
                 codeline = codeline.Replace("{", "\n{\n");
                 codeline = codeline.Replace("}", "\n}\n");
                 codeline = codeline.Replace(";", ";\n");
-                code[i] = codeline;
+                List<char> codecharlist = new List<char>(codeline);
+                bool insidecomma = false;
+                bool insidecomment = false;
+                for (int j = 0; j < codecharlist.Count; j++)
+                {
+                    if (j >= 1 && $"{codecharlist[j - 1]}{codecharlist[j]}" == "//")
+                        insidecomment = true;
+                    if (j >= 1 && $"{codecharlist[j - 1]}{codecharlist[j]}" == "/*")
+                        InsideBigComment = true;
+                    if (j >= 1 && $"{codecharlist[j - 1]}{codecharlist[j]}" == "*/")
+                        InsideBigComment = false;
+                    if (codecharlist[j] == '\"')
+                        insidecomma = !insidecomma;
+                    if ((insidecomma || insidecomment || InsideBigComment) && codecharlist[j] == '\n')
+                    {
+                        codecharlist.RemoveAt(j);
+                        j--;
+                    }
+                }
+                code[i] = new string(codecharlist.ToArray());
             }
+
             return code;
         }
         public static List<string> GetFormatTabCode(List<string> code)

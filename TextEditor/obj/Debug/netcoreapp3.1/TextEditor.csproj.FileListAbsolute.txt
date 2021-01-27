@@ -9,7 +9,6 @@ C:\Users\teddyzxcv\Documents\GitHub\TextEditor\TextEditor\obj\Debug\netcoreapp3.
 C:\Users\teddyzxcv\Documents\GitHub\TextEditor\TextEditor\obj\Debug\netcoreapp3.1\TextEditor.csproj.GenerateResource.cache
 C:\Users\teddyzxcv\Documents\GitHub\TextEditor\TextEditor\obj\Debug\netcoreapp3.1\TextEditor.AssemblyInfoInputs.cache
 C:\Users\teddyzxcv\Documents\GitHub\TextEditor\TextEditor\obj\Debug\netcoreapp3.1\TextEditor.AssemblyInfo.cs
-C:\Users\teddyzxcv\Documents\GitHub\TextEditor\TextEditor\obj\Debug\netcoreapp3.1\TextEditor.csproj.CoreCompileInputs.cache
 C:\Users\teddyzxcv\Documents\GitHub\TextEditor\TextEditor\obj\Debug\netcoreapp3.1\TextEditor.dll
 C:\Users\teddyzxcv\Documents\GitHub\TextEditor\TextEditor\obj\Debug\netcoreapp3.1\TextEditor.pdb
 C:\Users\teddyzxcv\Documents\GitHub\TextEditor\TextEditor\obj\Debug\netcoreapp3.1\TextEditor.genruntimeconfig.cache
@@ -17,3 +16,6 @@ C:\Users\teddyzxcv\Documents\GitHub\TextEditor\TextEditor\obj\Debug\netcoreapp3.
 C:\Users\teddyzxcv\Documents\GitHub\TextEditor\TextEditor\obj\Debug\netcoreapp3.1\TextEditor.Properties.Resources.resources
 C:\Users\teddyzxcv\Documents\GitHub\TextEditor\TextEditor\bin\Debug\netcoreapp3.1\TextEditor.dll.config
 C:\Users\teddyzxcv\Documents\GitHub\TextEditor\TextEditor\obj\Debug\netcoreapp3.1\TextEditor.TimeMachineForm.resources
+C:\Users\teddyzxcv\Documents\GitHub\TextEditor\TextEditor\obj\Debug\netcoreapp3.1\TextEditor.csproj.CopyComplete
+C:\Users\teddyzxcv\Documents\GitHub\TextEditor\TextEditor\bin\Debug\netcoreapp3.1\FastColoredTextBox.dll
+C:\Users\teddyzxcv\Documents\GitHub\TextEditor\TextEditor\obj\Debug\netcoreapp3.1\TextEditor.csproj.CoreCompileInputs.cache

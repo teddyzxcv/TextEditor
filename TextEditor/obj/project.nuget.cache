@@ -1,8 +1,21 @@
 {
   "version": 2,
-  "dgSpecHash": "f/Elg0ixl77/Swd7CWtPzikEvvERNJUgQ9avwO6VnSn+JZgsQkrWb8YXcNNxZcDiPPZnDmmfBg1rj5bPd52+6Q==",
+  "dgSpecHash": "7MfSdUNKi13cTJ0OqoPNzG6liQjzhNr8GAZO6qMY8BqDa7lPOs5ZYZ/sjgHIesP9pt90/xEUtTx1bJx0XxJgUQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\teddyzxcv\\Documents\\GitHub\\TextEditor\\TextEditor\\TextEditor.csproj",
-  "expectedPackageFiles": [],
-  "logs": []
+  "expectedPackageFiles": [
+    "C:\\Users\\teddyzxcv\\.nuget\\packages\\fctb\\2.16.24\\fctb.2.16.24.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "已使用“.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8”而不是项目目标框架“.NETCoreApp,Version=v3.1”还原包“FCTB 2.16.24”。此包可能与项目不完全兼容。",
+      "libraryId": "FCTB",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v3.1"
+      ]
+    }
+  ]
 }
