@@ -20,7 +20,7 @@ namespace TextEditor
         {
             OpenFileDialog FileDialog1 = new OpenFileDialog();
             FileDialog1.RestoreDirectory = true;
-            FileDialog1.Filter = "Text Files | *.txt|RTF Files | *.rtf";
+            FileDialog1.Filter = "Text Files | *.txt|RTF Files | *.rtf|C# file | *.cs";
             FileDialog1.Title = "Open an Text File";
             try
             {
@@ -29,10 +29,11 @@ namespace TextEditor
                     this.tabControl1.TabPages.Add(CreateNewTab(FileDialog1.FileName));
                     tabControl1.SelectTab(tabControl1.TabCount - 1);
                     //Open file
-                    if (FileDialog1.FileName.Substring(FileDialog1.FileName.LastIndexOf('.')) == ".rtf")
+                    OpenFileByExtension(FileDialog1.FileName, tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last());
+                    /*if (FileDialog1.FileName.Substring(FileDialog1.FileName.LastIndexOf('.')) == ".rtf")
                         tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().LoadFile(FileDialog1.FileName, RichTextBoxStreamType.RichText);
                     else
-                        tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Text = File.ReadAllText(FileDialog1.FileName);
+                        tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Text = File.ReadAllText(FileDialog1.FileName);*/
                 }
             }
             catch
@@ -52,10 +53,11 @@ namespace TextEditor
                     this.tabControl1.TabPages.Add(CreateNewTab(Path));
                     tabControl1.SelectTab(tabControl1.TabCount - 1);
                     //Open file
-                    if (Path.Substring(Path.LastIndexOf('.')) == ".rtf")
+                    OpenFileByExtension(Path, tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last());
+                    /*if (Path.Substring(Path.LastIndexOf('.')) == ".rtf")
                         tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().LoadFile(Path, RichTextBoxStreamType.RichText);
                     else
-                        tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Text = File.ReadAllText(Path);
+                        tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Text = File.ReadAllText(Path);*/
                 }
             }
             catch
@@ -178,6 +180,7 @@ namespace TextEditor
             newTextBox.Text = "";
             newTextBox.Font = new Font("Arial", 15, FontStyle.Regular);
             newTextBox.ContextMenuStrip = contextMenuStrip1;
+            newTextBox.AcceptsTab = true;
             newTab.Controls.Add(newTextBox);
             RefreshTabSize(fileName);
             TabF newT = new TabF();
@@ -225,7 +228,7 @@ namespace TextEditor
                     menuStrip1.BackColor = Color.White;
                     splitContainer1.Panel1.BackColor = Color.White;
                     break;
-                case ("Dark"):
+                case ("Gray"):
                     menuStrip1.BackColor = Color.Gray;
                     splitContainer1.Panel1.BackColor = Color.Gray;
                     break;
@@ -355,8 +358,27 @@ namespace TextEditor
                     rb.SaveFile(savepath + "txt", RichTextBoxStreamType.PlainText);
                     break;
                 case (".cs"):
+                    rb.SaveFile(savepath + "cs", RichTextBoxStreamType.PlainText);
+                    break;
+
+            }
+        }
+
+        private void OpenFileByExtension(string filepath, RichTextBox rb)
+        {
+            switch (Path.GetExtension(filepath))
+            {
+                case (".rtf"):
+                    rb.LoadFile(filepath, RichTextBoxStreamType.RichText);
+                    break;
+                case (".txt"):
+                    rb.LoadFile(filepath, RichTextBoxStreamType.PlainText);
+                    break;
+                case (".cs"):
+                    rb.LoadFile(filepath, RichTextBoxStreamType.PlainText);
                     break;
             }
+
         }
 
         private void ReopenAll()

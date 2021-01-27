@@ -106,7 +106,7 @@ namespace TextEditor
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SaveFileDialog saveFileDialog1 = new SaveFileDialog();
-            saveFileDialog1.Filter = "Text Files | *.txt | RTF Files | *.rtf";
+            saveFileDialog1.Filter = "Text Files | *.txt|RTF Files | *.rtf|C# file | *.cs";
             saveFileDialog1.Title = $"Save {tabControl1.SelectedTab.Text}";
             SaveFile(saveFileDialog1);
         }
@@ -169,11 +169,14 @@ namespace TextEditor
 
         private void FromatToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            FontDialog fd = new FontDialog();
-            fd.Font = tabPages[tabControl1.SelectedIndex].tabFont;
-            fd.ShowDialog();
-            tabPages[tabControl1.SelectedIndex].tabFont = fd.Font;
-            tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Font = fd.Font;
+            if (tabControl1.TabPages.Count != 0)
+            {
+                FontDialog fd = new FontDialog();
+                fd.Font = tabPages[tabControl1.SelectedIndex].tabFont;
+                fd.ShowDialog();
+                tabPages[tabControl1.SelectedIndex].tabFont = fd.Font;
+                tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Font = fd.Font;
+            }
         }
 
         private void tabControl1_Selected(object sender, TabControlEventArgs e)
@@ -289,6 +292,30 @@ namespace TextEditor
             SaveAll();
             tmf.ShowDialog();
             ReopenAll();
+        }
+
+        private void undoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().CanUndo)
+                tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Undo();
+        }
+
+        private void redoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().CanRedo)
+                tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Redo();
+        }
+
+        private void formattingStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            if (Path.GetExtension(tabControl1.SelectedTab.Text) == ".cs")
+            {
+                List<string> CodeLines = new List<string>(tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Text.Split("\n", StringSplitOptions.RemoveEmptyEntries));
+                string formattedCode = String.Join("\n", new List<string>(FormattingCode.GetFormatLineCode(CodeLines)));
+                CodeLines = FormattingCode.GetFormatTabCode(new List<string>(formattedCode.Split("\n", StringSplitOptions.RemoveEmptyEntries)));
+                formattedCode = String.Join("\n", new List<string>(FormattingCode.GetFormatTabCode(CodeLines)));
+                tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Text = formattedCode;
+            }
         }
     }
 }

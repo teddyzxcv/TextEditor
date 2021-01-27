@@ -106,7 +106,7 @@
             // 
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Items.AddRange(new object[] {
-            "Dark",
+            "Gray",
             "Light",
             "Red"});
             this.comboBox1.Location = new System.Drawing.Point(236, 113);

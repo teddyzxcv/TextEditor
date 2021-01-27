@@ -28,7 +28,7 @@ namespace TextEditor
             List<string> strjournal = journal.Select(e => e.ToString()).ToList();
             listBox1.Items.AddRange(strjournal.ToArray());
             if (listBox1.Items.Count != 0)
-                listBox1.SelectedIndex = 1;
+                listBox1.SelectedIndex = 0;
         }
 
         private void listBox1_Click(object sender, EventArgs e)
