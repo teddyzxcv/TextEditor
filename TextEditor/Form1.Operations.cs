@@ -28,6 +28,7 @@ namespace TextEditor
                 {
                     this.tabControl1.TabPages.Add(CreateNewTab(FileDialog1.FileName));
                     tabControl1.SelectTab(tabControl1.TabCount - 1);
+                    //Open file
                     if (FileDialog1.FileName.Substring(FileDialog1.FileName.LastIndexOf('.')) == ".rtf")
                         tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().LoadFile(FileDialog1.FileName, RichTextBoxStreamType.RichText);
                     else
@@ -50,8 +51,8 @@ namespace TextEditor
                 {
                     this.tabControl1.TabPages.Add(CreateNewTab(Path));
                     tabControl1.SelectTab(tabControl1.TabCount - 1);
+                    //Open file
                     if (Path.Substring(Path.LastIndexOf('.')) == ".rtf")
-
                         tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().LoadFile(Path, RichTextBoxStreamType.RichText);
                     else
                         tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Text = File.ReadAllText(Path);
@@ -71,10 +72,12 @@ namespace TextEditor
             {
                 if (sfd.ShowDialog() == DialogResult.OK)
                 {
-                    if (tabControl1.SelectedTab.Text.Substring(tabControl1.SelectedTab.Text.LastIndexOf('.')) == ".rtf")
+                    //Save File
+                    SaveFileByExtension(tabControl1.SelectedTab.Text, Path.ChangeExtension(sfd.FileName, ""), tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last());
+                    /*if (tabControl1.SelectedTab.Text.Substring(tabControl1.SelectedTab.Text.LastIndexOf('.')) == ".rtf")
                         tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SaveFile(sfd.FileName, RichTextBoxStreamType.RichText);
                     else
-                        tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SaveFile(sfd.FileName, RichTextBoxStreamType.PlainText);
+                        tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SaveFile(sfd.FileName, RichTextBoxStreamType.PlainText);*/
 
 
                 }
@@ -116,10 +119,12 @@ namespace TextEditor
         {
             try
             {
-                if (tabControl1.SelectedTab.Text.Substring(tabControl1.SelectedTab.Text.LastIndexOf('.')) == ".rtf")
-                    tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SaveFile(tabPages[tabControl1.SelectedIndex].PathToFile, RichTextBoxStreamType.RichText);
-                else
-                    tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SaveFile(tabPages[tabControl1.SelectedIndex].PathToFile, RichTextBoxStreamType.PlainText);
+                //Save file
+                SaveFileByExtension(tabControl1.SelectedTab.Text, Path.ChangeExtension(tabPages[tabControl1.SelectedIndex].PathToFile, ""), tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last());
+                /* if (tabControl1.SelectedTab.Text.Substring(tabControl1.SelectedTab.Text.LastIndexOf('.')) == ".rtf")
+                     tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SaveFile(tabPages[tabControl1.SelectedIndex].PathToFile, RichTextBoxStreamType.RichText);
+                 else
+                     tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SaveFile(tabPages[tabControl1.SelectedIndex].PathToFile, RichTextBoxStreamType.PlainText);*/
             }
             catch
             {
@@ -144,10 +149,12 @@ namespace TextEditor
             {
                 try
                 {
-                    if (tabControl1.TabPages[i].Text.Substring(tabControl1.TabPages[i].Text.LastIndexOf('.')) == ".rtf")
-                        tabControl1.TabPages[i].Controls.OfType<RichTextBox>().Last().SaveFile(tabPages[i].PathToFile, RichTextBoxStreamType.RichText);
-                    else
-                        tabControl1.TabPages[i].Controls.OfType<RichTextBox>().Last().SaveFile(tabPages[i].PathToFile, RichTextBoxStreamType.PlainText);
+                    //Save file
+                    SaveFileByExtension(tabControl1.TabPages[i].Text, Path.ChangeExtension(tabPages[i].PathToFile, ""), tabControl1.TabPages[i].Controls.OfType<RichTextBox>().Last());
+                    /* if (tabControl1.TabPages[i].Text.Substring(tabControl1.TabPages[i].Text.LastIndexOf('.')) == ".rtf")
+                         tabControl1.TabPages[i].Controls.OfType<RichTextBox>().Last().SaveFile(tabPages[i].PathToFile, RichTextBoxStreamType.RichText);
+                     else
+                         tabControl1.TabPages[i].Controls.OfType<RichTextBox>().Last().SaveFile(tabPages[i].PathToFile, RichTextBoxStreamType.PlainText);*/
                 }
                 catch
                 {
@@ -331,13 +338,35 @@ namespace TextEditor
                 }
             }
         }
+        /// <summary>
+        /// savepath only path and file name + '.' :"/--/--/text."
+        /// </summary>
+        /// <param name="filepath"></param>
+        /// <param name="savepath"></param>
+        /// <param name="rb"></param>
+        private void SaveFileByExtension(string filepath, string savepath, RichTextBox rb)
+        {
+            switch (Path.GetExtension(filepath))
+            {
+                case (".rtf"):
+                    rb.SaveFile(savepath + "rtf", RichTextBoxStreamType.RichText);
+                    break;
+                case (".txt"):
+                    rb.SaveFile(savepath + "txt", RichTextBoxStreamType.PlainText);
+                    break;
+                case (".cs"):
+                    break;
+            }
+        }
 
         private void ReopenAll()
         {
+            int indexSelected = tabControl1.SelectedIndex;
             List<TabF> listtab = new List<TabF>(tabPages);
             tabControl1.TabPages.Clear();
             tabPages.Clear();
             listtab.Select(e => e.PathToFile).ToList().ForEach(OpenFile);
+            tabControl1.SelectedIndex = indexSelected;
 
         }
 

@@ -44,6 +44,9 @@ namespace TextEditor
 
         }
 
-
+        private void Cleanbutton1_Click(object sender, EventArgs e)
+        {
+            FileJournal.DeleteAllRecord();
+        }
     }
 }

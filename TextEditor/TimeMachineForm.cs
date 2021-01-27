@@ -21,8 +21,14 @@ namespace TextEditor
         public TimeMachineForm()
         {
             InitializeComponent();
+            this.FormBorderStyle = FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.StartPosition = FormStartPosition.CenterScreen;
             List<string> strjournal = journal.Select(e => e.ToString()).ToList();
             listBox1.Items.AddRange(strjournal.ToArray());
+            if (listBox1.Items.Count != 0)
+                listBox1.SelectedIndex = 1;
         }
 
         private void listBox1_Click(object sender, EventArgs e)
@@ -45,6 +51,9 @@ namespace TextEditor
                     string PathToTMFile = Path.Combine(PathToJournal, journal[listBox1.SelectedIndex].folderName);
                     PathToTMFile = Path.Combine(PathToTMFile, $"{listBox2.SelectedIndex - 1}" + Path.GetExtension(journal[listBox1.SelectedIndex].filePosition));
                     File.Copy(PathToTMFile, journal[listBox1.SelectedIndex].filePosition, true);
+                    this.Close();
+                    MessageBox.Show("Save successfully restored, (Rollback baby!)", "Done", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
                 }
             }
             catch
@@ -52,11 +61,24 @@ namespace TextEditor
                 var result = MessageBox.Show($"Please close {journal[listBox1.SelectedIndex].filePosition} to rollback this file", "Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
             }
         }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (listBox1.SelectedItem != null)
+            {
+                listBox2.Items.Clear();
+                listBox2.Items.Add(journal[listBox1.SelectedIndex].filePosition);
+                listBox2.Items.AddRange(journal[listBox1.SelectedIndex].ChangeTime.ToArray());
+            }
+
+        }
     }
 
     public class FileJournal
     {
         private static Random random = new Random();
+        static string PathToJournal = Path.GetRelativePath("TextEditor\\bin\\Debug\\netcoreapp3.1", "TextEditor\\Journal\\Journal.xml");
+
         public static string RandomString()
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -65,7 +87,6 @@ namespace TextEditor
         }
         public static List<FileJournal> LoadFileInfo()
         {
-            string PathToJournal = Path.GetRelativePath("TextEditor\\bin\\Debug\\netcoreapp3.1", "TextEditor\\Journal\\Journal.xml");
             XmlDocument doc = new XmlDocument();
             doc.Load(PathToJournal);
             XmlNodeList FileList = doc.SelectNodes("//Journal/File");
@@ -87,7 +108,6 @@ namespace TextEditor
         }
         public static void AddNewNode(string path, string folderName, string name)
         {
-            string PathToJournal = Path.GetRelativePath("TextEditor\\bin\\Debug\\netcoreapp3.1", "TextEditor\\Journal\\Journal.xml");
             XmlDocument doc = new XmlDocument();
             doc.Load(PathToJournal);
             XmlNode root = doc.SelectSingleNode("/Journal");
@@ -125,16 +145,29 @@ namespace TextEditor
 
         public static void AddRecord(string Address)
         {
-            string PathToJournal = Path.GetRelativePath("TextEditor\\bin\\Debug\\netcoreapp3.1", "TextEditor\\Journal\\Journal.xml");
             XmlDocument doc = new XmlDocument();
             doc.Load(PathToJournal);
             XmlNode root = doc.SelectSingleNode("/Journal");
             string strPath = string.Format($"/Journal/File[@fileposition = \"{Address}\"]");
             XmlElement selectedFile = (XmlElement)root.SelectSingleNode(strPath);
             XmlElement newRecrod = doc.CreateElement("Record");
-            newRecrod.InnerText = DateTime.Now.ToString("G");
+            newRecrod.InnerText = DateTime.Now.ToString("G") + "<----------------";
             selectedFile.SelectSingleNode("ChangeTime").AppendChild(newRecrod);
             doc.Save(PathToJournal);
+        }
+
+        public static void DeleteAllRecord()
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.Load(PathToJournal);
+            doc.SelectSingleNode("/Journal").RemoveAll();
+            doc.Save(PathToJournal);
+            List<string> dirlist = new List<string>(Directory.GetDirectories(Directory.GetParent(PathToJournal).ToString()));
+            foreach (string item in dirlist)
+            {
+                Directory.Delete(item, true);
+            }
+            MessageBox.Show("All save deleted!", "Done", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
 

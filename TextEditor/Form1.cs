@@ -30,7 +30,7 @@ namespace TextEditor
             if (tabControl1.TabCount != 0)
                 this.Text = tabControl1.SelectedTab.Text;
             else
-                this.Text = string.Empty;
+                this.Text = "Create or open file... Anyway, just do something...";
             timer1.Start();
             timer2.Start();
         }
@@ -181,7 +181,7 @@ namespace TextEditor
             if (tabControl1.SelectedTab != null)
                 this.Text = tabControl1.SelectedTab.Text;
             else
-                this.Text = "";
+                this.Text = "Create or open file... Anyway, just do something...";
         }
 
         private void cutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -259,16 +259,18 @@ namespace TextEditor
                         FileJournal.AddRecord(tabPages[i].PathToFile);
                         string folderPath = Path.Combine(PathToJournal, filejournal.Find(e => e.filePosition == tabPages[i].PathToFile).folderName);
                         folderPath = Path.Combine(folderPath, filejournal.Find(e => e.filePosition == tabPages[i].PathToFile).ChangeTime.Count.ToString());
-                        if (fileName.Substring(fileName.LastIndexOf('.')) == ".rtf")
-                            tabControl1.TabPages[i].Controls.OfType<RichTextBox>().Last().SaveFile(folderPath + ".rtf", RichTextBoxStreamType.RichText);
-                        else
-                            tabControl1.TabPages[i].Controls.OfType<RichTextBox>().Last().SaveFile(folderPath + ".txt", RichTextBoxStreamType.PlainText);
+                        SaveFileByExtension(fileName, folderPath + ".", tabControl1.TabPages[i].Controls.OfType<RichTextBox>().Last());
                     }
                     else
                     {
                         string folderName = FileJournal.RandomString();
                         FileJournal.AddNewNode(tabPages[i].PathToFile, folderName, fileName);
                         Directory.CreateDirectory(Path.Combine(PathToJournal, folderName));
+                        filejournal = FileJournal.LoadFileInfo();
+                        FileJournal.AddRecord(tabPages[i].PathToFile);
+                        string folderPath = Path.Combine(PathToJournal, filejournal.Find(e => e.filePosition == tabPages[i].PathToFile).folderName);
+                        folderPath = Path.Combine(folderPath, filejournal.Find(e => e.filePosition == tabPages[i].PathToFile).ChangeTime.Count.ToString());
+                        SaveFileByExtension(fileName, folderPath + ".", tabControl1.TabPages[i].Controls.OfType<RichTextBox>().Last());
 
                     }
                 }
@@ -277,11 +279,14 @@ namespace TextEditor
                     var result = MessageBox.Show($"File {tabPages[i].PathToFile} can not be saved for some reason, try other file", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+
+
         }
 
         private void TimeMachineStripMenuItem1_Click(object sender, EventArgs e)
         {
             TimeMachineForm tmf = new TimeMachineForm();
+            SaveAll();
             tmf.ShowDialog();
             ReopenAll();
         }

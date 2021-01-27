@@ -36,6 +36,8 @@
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.TimeMachineUpDown2 = new System.Windows.Forms.NumericUpDown();
+            this.Cleanbutton1 = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TimeMachineUpDown2)).BeginInit();
             this.SuspendLayout();
@@ -143,6 +145,25 @@
             0,
             0});
             // 
+            // Cleanbutton1
+            // 
+            this.Cleanbutton1.Location = new System.Drawing.Point(441, 245);
+            this.Cleanbutton1.Name = "Cleanbutton1";
+            this.Cleanbutton1.Size = new System.Drawing.Size(165, 46);
+            this.Cleanbutton1.TabIndex = 9;
+            this.Cleanbutton1.Text = "Clean";
+            this.Cleanbutton1.UseVisualStyleBackColor = true;
+            this.Cleanbutton1.Click += new System.EventHandler(this.Cleanbutton1_Click);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(50, 253);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(357, 31);
+            this.label5.TabIndex = 10;
+            this.label5.Text = "Clean all save in TimeMachine";
+            // 
             // SettingForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(14F, 31F);
@@ -150,6 +171,8 @@
             this.AutoSize = true;
             this.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.ClientSize = new System.Drawing.Size(778, 665);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.Cleanbutton1);
             this.Controls.Add(this.TimeMachineUpDown2);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.comboBox1);
@@ -178,5 +201,7 @@
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.NumericUpDown TimeMachineUpDown2;
+        private System.Windows.Forms.Button Cleanbutton1;
+        private System.Windows.Forms.Label label5;
     }
 }
