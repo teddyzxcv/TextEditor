@@ -9,7 +9,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
-
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Symbols;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Classification;
+using Microsoft.CodeAnalysis;
 namespace TextEditor
 {
     partial class Form1
@@ -17,6 +21,7 @@ namespace TextEditor
 
 
         List<TabF> tabPages = new List<TabF>();
+
         private void OpenFile()
         {
             OpenFileDialog FileDialog1 = new OpenFileDialog();
@@ -182,6 +187,7 @@ namespace TextEditor
             newTextBox.Font = new Font("Arial", 15, FontStyle.Regular);
             newTextBox.ContextMenuStrip = contextMenuStrip1;
             newTextBox.AcceptsTab = true;
+            newTextBox.TextChanged += new System.EventHandler(this.SelectedTabBox_TextChanged);
             newTab.Controls.Add(newTextBox);
             RefreshTabSize(fileName);
             TabF newT = new TabF();
@@ -377,7 +383,6 @@ namespace TextEditor
                     break;
                 case (".cs"):
                     rb.LoadFile(filepath, RichTextBoxStreamType.PlainText);
-
                     break;
             }
 
@@ -418,6 +423,50 @@ namespace TextEditor
                     tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionFont = new Font(f, fs);
                 }
             }
+        }
+
+
+        private static Color GetColorFor(string classificatioName)
+        {
+            switch (classificatioName)
+            {
+                case ClassificationTypeNames.InterfaceName:
+                case ClassificationTypeNames.EnumName:
+                case ClassificationTypeNames.Keyword:
+                    return Color.DarkCyan;
+
+                case ClassificationTypeNames.ClassName:
+                case ClassificationTypeNames.StructName:
+                    return Color.Yellow;
+
+                case ClassificationTypeNames.Identifier:
+                    return Color.DarkGray;
+
+                case ClassificationTypeNames.Comment:
+                    return Color.DarkGreen;
+
+                case ClassificationTypeNames.StringLiteral:
+                case ClassificationTypeNames.VerbatimStringLiteral:
+                    return Color.DarkRed;
+
+                case ClassificationTypeNames.Punctuation:
+                    return Color.Gray;
+
+                case ClassificationTypeNames.WhiteSpace:
+                    return Color.Black;
+
+                case ClassificationTypeNames.NumericLiteral:
+                    return Color.Yellow;
+
+                case ClassificationTypeNames.PreprocessorKeyword:
+                    return Color.DarkMagenta;
+                case ClassificationTypeNames.PreprocessorText:
+                    return Color.DarkGreen;
+
+                default:
+                    return Color.Gray;
+            }
+
         }
 
     }

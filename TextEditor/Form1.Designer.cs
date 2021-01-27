@@ -1,4 +1,12 @@
-﻿namespace TextEditor
+﻿
+
+
+
+using System.Linq;
+using System.Windows.Forms;
+
+
+namespace TextEditor
 {
     partial class Form1
     {
