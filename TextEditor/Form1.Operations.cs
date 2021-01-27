@@ -10,10 +10,17 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Formatting;
+
 using Microsoft.CodeAnalysis.CSharp.Symbols;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Classification;
 using Microsoft.CodeAnalysis;
+
+using Microsoft.CodeAnalysis.Formatting;
+using Microsoft.CodeAnalysis.Text;
+using Microsoft.CodeAnalysis.Host.Mef;
+using Microsoft.CodeAnalysis.Options;
 namespace TextEditor
 {
     partial class Form1
@@ -187,7 +194,6 @@ namespace TextEditor
             newTextBox.Font = new Font("Arial", 15, FontStyle.Regular);
             newTextBox.ContextMenuStrip = contextMenuStrip1;
             newTextBox.AcceptsTab = true;
-            newTextBox.TextChanged += new System.EventHandler(this.SelectedTabBox_TextChanged);
             newTab.Controls.Add(newTextBox);
             RefreshTabSize(fileName);
             TabF newT = new TabF();
@@ -424,6 +430,68 @@ namespace TextEditor
                 }
             }
         }
+        private void Colorize()
+        {
+            if (Path.GetExtension(tabControl1.SelectedTab.Text) == ".cs")
+            {
+                //Save the pointer position.
+                int position = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionStart;
+                // Set the font.
+                tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Font = new Font("Courier New", 12);
+                // Create syntax tree, convert to classification.
+                var host = MefHostServices.Create(MefHostServices.DefaultAssemblies);
+                var workspace = new AdhocWorkspace(host);
+                OptionSet options = workspace.Options;
+                options = options.WithChangedOption(CSharpFormattingOptions.NewLinesForBracesInMethods, true);
+                options = options.WithChangedOption(CSharpFormattingOptions.NewLinesForBracesInTypes, true);
+                string code = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Text;
+                var sourceText = SourceText.From(code);
+                SyntaxTree tree = CSharpSyntaxTree.ParseText(sourceText);
+                SyntaxNode root = tree.GetRoot();
+                root = Formatter.Format(root, workspace, options);
+                var sb = new StringBuilder();
+                using (var writer = new StringWriter(sb))
+                {
+                    root.WriteTo(writer);
+                }
+                code = sb.ToString();
+                code = code.Replace("\n\n", "\n");
+                sourceText = SourceText.From(code);
+                tree = CSharpSyntaxTree.ParseText(sourceText);
+                var compilation = CSharpCompilation.Create("Dummy").AddReferences(MetadataReference.CreateFromFile(typeof(object).Assembly.Location)).AddSyntaxTrees(tree);
+                var semanticModel = compilation.GetSemanticModel(tree);
+                var classifiedSpans = Classifier.GetClassifiedSpans(semanticModel, new TextSpan(0, code.Length), workspace);
+                classifiedSpans = classifiedSpans.GroupBy(e => e.TextSpan.Start).Select(e => e.First()).ToList();
+                /*foreach (var item in classifiedSpans)
+                {
+                    TextSpanM += item.TextSpan.ToString() + "<->" + item.TextSpan.Start + "->" + item.TextSpan.End + "\n";
+                }
+                MessageBox.Show($"{TextSpanM}");*/
+                // Create Dictionary to save all color info.
+                IDictionary<int, Color> positionColorMap = classifiedSpans.ToDictionary(c => c.TextSpan.Start, c => GetColorFor(c.ClassificationType));
+                if (positionColorMap.Count == 0)
+                    return;
+                List<Color> charpositionColorMap = new List<Color>();
+                Color CurrentColor = positionColorMap.First().Value;
+                // Match color with every single char in the code;
+                for (int i = 0; i < code.Length; i++)
+                {
+                    if (positionColorMap.ContainsKey(i))
+                        positionColorMap.TryGetValue(i, out CurrentColor);
+                    charpositionColorMap.Add(CurrentColor);
+                }
+                tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().ResetText();
+                for (int charPosition = 0; charPosition < code.Length; charPosition++)
+                {
+                    // Give every char their color.
+                    AppendText(tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last(), code[charPosition].ToString(), charpositionColorMap[charPosition]);
+                }
+                // Return the pointer position.
+                tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionStart = position;
+
+
+            }
+        }
 
 
         private static Color GetColorFor(string classificatioName)
@@ -437,10 +505,10 @@ namespace TextEditor
 
                 case ClassificationTypeNames.ClassName:
                 case ClassificationTypeNames.StructName:
-                    return Color.Yellow;
+                    return Color.DarkOrange;
 
                 case ClassificationTypeNames.Identifier:
-                    return Color.DarkGray;
+                    return Color.DarkSlateGray;
 
                 case ClassificationTypeNames.Comment:
                     return Color.DarkGreen;
@@ -450,13 +518,13 @@ namespace TextEditor
                     return Color.DarkRed;
 
                 case ClassificationTypeNames.Punctuation:
-                    return Color.Gray;
+                    return Color.DarkGray;
 
                 case ClassificationTypeNames.WhiteSpace:
                     return Color.Black;
 
                 case ClassificationTypeNames.NumericLiteral:
-                    return Color.Yellow;
+                    return Color.DarkOrange;
 
                 case ClassificationTypeNames.PreprocessorKeyword:
                     return Color.DarkMagenta;
@@ -464,7 +532,7 @@ namespace TextEditor
                     return Color.DarkGreen;
 
                 default:
-                    return Color.Gray;
+                    return Color.DarkSlateGray;
             }
 
         }

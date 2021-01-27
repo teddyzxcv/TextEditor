@@ -9,13 +9,7 @@ using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.IO;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Classification;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Symbols;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Text;
-using Microsoft.CodeAnalysis.Host.Mef;
+
 
 
 
@@ -317,11 +311,13 @@ namespace TextEditor
         {
             if (Path.GetExtension(tabControl1.SelectedTab.Text) == ".cs")
             {
+                int position = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionStart;
                 List<string> CodeLines = new List<string>(tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Text.Split("\n", StringSplitOptions.RemoveEmptyEntries));
                 string formattedCode = String.Join("\n", new List<string>(FormattingCode.GetFormatLineCode(CodeLines)));
                 CodeLines = FormattingCode.GetFormatTabCode(new List<string>(formattedCode.Split("\n", StringSplitOptions.RemoveEmptyEntries)));
                 formattedCode = String.Join("\n", new List<string>(FormattingCode.GetFormatTabCode(CodeLines)));
                 tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Text = formattedCode;
+                tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionStart = position;
             }
         }
         public static void AppendText(RichTextBox box, string text, Color color)
@@ -334,35 +330,8 @@ namespace TextEditor
         }
         private void SelectedTabBox_TextChanged(object sender, EventArgs e)
         {
-            if (Path.GetExtension(tabControl1.SelectedTab.Text) == ".cs")
-            {
-                var host = MefHostServices.Create(MefHostServices.DefaultAssemblies);
-                var workspace = new AdhocWorkspace(host);
-                string code = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Text;
-                var sourceText = SourceText.From(code);
-                SyntaxTree tree = CSharpSyntaxTree.ParseText(sourceText);
-                var compilation = CSharpCompilation.Create("Dummy").AddReferences(MetadataReference.CreateFromFile(typeof(object).Assembly.Location)).AddSyntaxTrees(tree);
-                var semanticModel = compilation.GetSemanticModel(tree);
-                var classifiedSpans = Classifier.GetClassifiedSpans(semanticModel, new TextSpan(0, code.Length), workspace);
-                IDictionary<int, Color> positionColorMap = classifiedSpans.ToDictionary(c => c.TextSpan.Start, c => GetColorFor(c.ClassificationType));
-                tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Text = "";
-                for (int charPosition = 0; charPosition < code.Length; charPosition++)
-                {
-                    // Проверяем, нужно ли изменять цвет консоли
-                    Color newColor;
-                    if (positionColorMap.TryGetValue(charPosition, out newColor))
-                    {
-                        AppendText(tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last(), code[charPosition].ToString(), newColor);
-                    }
-                }
-                tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Font = new Font("Courier New", 15);
-
-
-            }
+            Colorize();
         }
-
-
-
     }
 }
 
