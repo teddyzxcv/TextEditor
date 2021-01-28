@@ -19,13 +19,33 @@ using Microsoft.CodeAnalysis.Formatting;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.CodeAnalysis.Host.Mef;
 using Microsoft.CodeAnalysis.Options;
+
 using System.Xml;
+using FastColoredTextBoxNS;
 
 namespace TextEditor
 {
     class FormattingCode
     {
         static int TabBeforeLine = 0;
+        public static SyntaxHighlighter CSharpSyntaxHighlighter { get; set; }
+        public static Style CSharpKeywordStyle { get; set; }
+        public static Style CSharpCommentStyle { get; set; }
+        public static Style CSharpAttributeStyle { get; set; }
+        public static Style CSharpClassNameStyle { get; set; }
+        public static Style CSharpCommentTagStyle { get; set; }
+        public static Style CSharpNumberStyle { get; set; }
+        public static Style CSharpStringStyle { get; set; }
+        public static Style CSharpVariableStyle { get; set; }
+
+        static FormattingCode()
+        {
+            FastColoredTextBox fb = new FastColoredTextBox();
+            fb.Language = Language.CSharp;
+            CSharpSyntaxHighlighter = fb.SyntaxHighlighter;
+            CSharpSyntaxHighlighter = GetSyntaxColor(CSharpSyntaxHighlighter);
+        }
+
         //Do formatting
         public static string GetFormatCode(string code)
         {
@@ -48,5 +68,23 @@ namespace TextEditor
             code = code.Replace("\n\n", "\n");
             return code;
         }
+        public static void SetSyntaxColor()
+        {
+            CSharpSyntaxHighlighter = GetSyntaxColor(CSharpSyntaxHighlighter);
+        }
+
+        public static SyntaxHighlighter GetSyntaxColor(SyntaxHighlighter shl)
+        {
+            shl.CommentStyle = CSharpCommentStyle;
+            shl.KeywordStyle = CSharpKeywordStyle;
+            shl.AttributeStyle = CSharpAttributeStyle;
+            shl.ClassNameStyle = CSharpClassNameStyle;
+            shl.CommentTagStyle = CSharpCommentTagStyle;
+            shl.NumberStyle = CSharpNumberStyle;
+            shl.StringStyle = CSharpStringStyle;
+            shl.VariableStyle = CSharpVariableStyle;
+            return shl;
+        }
+
     }
 }

@@ -24,6 +24,7 @@ namespace TextEditor
         List<int> TabWidthList = new List<int>() { 200 };
         List<FileJournal> filejournal = FileJournal.LoadFileInfo();
 
+
         string ColorTheme = "Light";
         public Form1()
         {
@@ -38,6 +39,7 @@ namespace TextEditor
                 this.Text = "Create or open file... Anyway, just do something...";
             timer1.Start();
             timer2.Start();
+            SwitchStyleOption();
         }
 
 
@@ -64,17 +66,30 @@ namespace TextEditor
                 Rectangle closeButton = new Rectangle(r.Right - CLOSE_AREA, r.Top + 4, 30, 30);
                 if (closeButton.Contains(e.Location))
                 {
-                    var result = MessageBox.Show($"Would you like to Save {tabControl1.TabPages[i].Text} before close this Tab?", "Confirm", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-                    if (result == DialogResult.Yes)
+                    if (!tabPages[i].SavedOrNot && tabControl1.TabCount != 0)
                     {
-                        TabWidthList.Remove(this.tabControl1.TabPages[i].Text.Length * 18);
-                        SaveFile();
-                        tabPages.RemoveAt(i);
-                        this.tabControl1.TabPages.RemoveAt(i);
-                        RefreshTabSize();
-                        break;
+
+                        this.Text = tabControl1.TabPages[i].Text;
+                        var result = MessageBox.Show($"Would you like to Save {tabControl1.TabPages[i].Text} before close this Tab?", "Confirm", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                        if (result == DialogResult.Yes)
+                        {
+                            TabWidthList.Remove(this.tabControl1.TabPages[i].Text.Length * 18);
+                            SaveFile();
+                            tabPages.RemoveAt(i);
+                            this.tabControl1.TabPages.RemoveAt(i);
+                            RefreshTabSize();
+                            break;
+                        }
+                        else if (result == DialogResult.No)
+                        {
+                            TabWidthList.Remove(this.tabControl1.TabPages[i].Text.Length * 18);
+                            this.tabControl1.TabPages.RemoveAt(i);
+                            tabPages.RemoveAt(i);
+                            RefreshTabSize();
+                            break;
+                        }
                     }
-                    else if (result == DialogResult.No)
+                    else
                     {
                         TabWidthList.Remove(this.tabControl1.TabPages[i].Text.Length * 18);
                         this.tabControl1.TabPages.RemoveAt(i);
@@ -97,7 +112,8 @@ namespace TextEditor
                 this.tabControl1.TabPages.Add(CreateNewTab(fileName));
             }
             SaveAll();
-            tabControl1.SelectTab(tabControl1.TabCount - 1);
+            if (tabControl1.TabCount != 0)
+                tabControl1.SelectTab(tabControl1.TabCount - 1);
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -107,15 +123,27 @@ namespace TextEditor
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
-            saveFileDialog1.Filter = "Text Files | *.txt|RTF Files | *.rtf|C# file | *.cs";
-            saveFileDialog1.Title = $"Save {tabControl1.SelectedTab.Text}";
-            SaveFile(saveFileDialog1);
+            if (!tabPages[tabControl1.SelectedIndex].SavedOrNot && tabControl1.TabCount != 0)
+            {
+                SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+                saveFileDialog1.Filter = "Text Files | *.txt|RTF Files | *.rtf|C# file | *.cs";
+                saveFileDialog1.Title = $"Save {tabControl1.SelectedTab.Text}";
+                SaveFile(saveFileDialog1);
+
+            }
+
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SaveFile();
+            if (tabControl1.TabCount != 0 && !tabPages[tabControl1.SelectedIndex].SavedOrNot)
+            {
+                SaveFile();
+                tabPages[tabControl1.SelectedIndex].SavedOrNot = true;
+                tabControl1.SelectedTab.Text = tabControl1.SelectedTab.Text.Replace("*", "");
+                this.Text = tabControl1.SelectedTab.Text;
+                tabControl1.Refresh();
+            }
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -124,13 +152,19 @@ namespace TextEditor
         }
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            SaveBeforeClose();
+
+            SaveBeforeClose(out DialogResult result);
+            if (result == DialogResult.Cancel)
+                e.Cancel = true;
+
         }
         private void SettingToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             SettingForm st = new SettingForm();
             st.ShowDialog();
             SetSetting();
+            ReopenAll();
+            this.Refresh();
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -171,7 +205,7 @@ namespace TextEditor
 
         private void FromatToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            if (tabControl1.TabPages.Count != 0)
+            if (tabControl1.TabPages.Count != 0 && tabControl1.SelectedTab.Controls.OfType<RichTextBox>() != null)
             {
                 FontDialog fd = new FontDialog();
                 fd.Font = tabPages[tabControl1.SelectedIndex].tabFont;
@@ -264,7 +298,7 @@ namespace TextEditor
                         FileJournal.AddRecord(tabPages[i].PathToFile);
                         string folderPath = Path.Combine(PathToJournal, filejournal.Find(e => e.filePosition == tabPages[i].PathToFile).folderName);
                         folderPath = Path.Combine(folderPath, filejournal.Find(e => e.filePosition == tabPages[i].PathToFile).ChangeTime.Count.ToString());
-                        SaveFileByExtension(fileName, folderPath + ".", tabControl1.TabPages[i].Controls.OfType<RichTextBox>().Last());
+                        SaveFileByExtension(tabPages[i].PathToFile, folderPath + ".", tabControl1.TabPages[i]);
                     }
                     else
                     {
@@ -275,7 +309,7 @@ namespace TextEditor
                         FileJournal.AddRecord(tabPages[i].PathToFile);
                         string folderPath = Path.Combine(PathToJournal, filejournal.Find(e => e.filePosition == tabPages[i].PathToFile).folderName);
                         folderPath = Path.Combine(folderPath, filejournal.Find(e => e.filePosition == tabPages[i].PathToFile).ChangeTime.Count.ToString());
-                        SaveFileByExtension(fileName, folderPath + ".", tabControl1.TabPages[i].Controls.OfType<RichTextBox>().Last());
+                        SaveFileByExtension(tabPages[i].PathToFile, folderPath + ".", tabControl1.TabPages[i]);
 
                     }
                 }
@@ -294,31 +328,53 @@ namespace TextEditor
             SaveAll();
             tmf.ShowDialog();
             ReopenAll();
+            tabControl1.Refresh();
         }
 
         private void undoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().CanUndo)
-                tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Undo();
+            if (this.tabControl1.TabCount != 0)
+
+                if (Path.GetExtension(tabPages[tabControl1.SelectedIndex].PathToFile) != ".cs")
+                {
+                    if (tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().CanUndo)
+                        tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Undo();
+                }
+                else
+                {
+                    tabControl1.SelectedTab.Controls.OfType<FastColoredTextBox>().Last().Undo();
+                }
         }
 
         private void redoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().CanRedo)
-                tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Redo();
+            if (this.tabControl1.TabCount != 0)
+
+                if (Path.GetExtension(tabPages[tabControl1.SelectedIndex].PathToFile) != ".cs")
+                {
+                    if (tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().CanRedo)
+                        tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Redo();
+                }
+                else
+                {
+                    tabControl1.SelectedTab.Controls.OfType<FastColoredTextBox>().Last().Redo();
+                }
         }
 
         private void formattingStripMenuItem1_Click(object sender, EventArgs e)
         {
-            if (Path.GetExtension(tabControl1.SelectedTab.Text) == ".cs")
-            {
-                int position = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionStart;
-                // Set the font.
-                tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Font = new Font("Courier New", 12);
-                tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Text = FormattingCode.GetFormatCode(tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Text);
-                if (tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Text.Length > position)
-                    tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionStart = position;
-            }
+            if (this.tabControl1.TabCount != 0)
+
+                if (Path.GetExtension(tabPages[tabControl1.SelectedIndex].PathToFile) == ".cs")
+                {
+                    FastColoredTextBox fctb = tabControl1.SelectedTab.Controls.OfType<FastColoredTextBox>().Last();
+                    int position = fctb.SelectionStart;
+                    // Set the font.
+                    fctb.Font = new Font("Courier New", 12);
+                    fctb.Text = FormattingCode.GetFormatCode(fctb.Text);
+                    if (fctb.Text.Length > position)
+                        fctb.SelectionStart = position;
+                }
         }
         public static void AppendText(RichTextBox box, string text, Color color)
         {
@@ -328,9 +384,33 @@ namespace TextEditor
             box.AppendText(text);
             box.SelectionColor = box.ForeColor;
         }
+        TextStyle PinkStyle = new TextStyle(Brushes.Pink, null, FontStyle.Italic);
+        Style BoldStyle = new TextStyle(Brushes.DarkGray, null, FontStyle.Bold);
+
+
+
         private void SelectedTabBox_TextChanged(object sender, TextChangedEventArgs e)
         {
+            if (tabPages[tabControl1.SelectedIndex].SavedOrNot)
+            {
+                tabPages[tabControl1.SelectedIndex].SavedOrNot = false;
+                tabControl1.SelectedTab.Text = tabPages[tabControl1.SelectedIndex].FileName + "*";
+                this.Text = tabControl1.SelectedTab.Text;
 
+            }
+        }
+        private void SelectedTabRichBox_TextChanged(object sender, EventArgs e)
+        {
+            if (tabPages[tabControl1.SelectedIndex].SavedOrNot)
+            {
+                tabPages[tabControl1.SelectedIndex].SavedOrNot = false;
+                tabControl1.SelectedTab.Text = tabPages[tabControl1.SelectedIndex].FileName + "*";
+                this.Text = tabControl1.SelectedTab.Text;
+            }
+        }
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SwitchStyleOption();
         }
     }
 }

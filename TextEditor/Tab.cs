@@ -14,7 +14,9 @@ namespace TextEditor
     {
         public string PathToFile { get; set; }
 
-        public bool SaveOrNot { get; set; }
+        public string FileName { get => PathToFile.Substring(PathToFile.LastIndexOf(Path.DirectorySeparatorChar) + 1); }
+
+        public bool SavedOrNot { get; set; }
 
         public TabPage Page { get; set; }
         public Font tabFont { get; set; }
