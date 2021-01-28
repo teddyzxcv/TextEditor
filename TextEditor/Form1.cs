@@ -19,6 +19,7 @@ namespace TextEditor
 {
     public partial class Form1 : Form
     {
+
         const int LEADING_SPACE = 12;
         const int CLOSE_AREA = 30;
         List<int> TabWidthList = new List<int>() { 200 };
@@ -115,12 +116,10 @@ namespace TextEditor
             if (tabControl1.TabCount != 0)
                 tabControl1.SelectTab(tabControl1.TabCount - 1);
         }
-
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFile();
         }
-
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (!tabPages[tabControl1.SelectedIndex].SavedOrNot && tabControl1.TabCount != 0)
@@ -129,11 +128,8 @@ namespace TextEditor
                 saveFileDialog1.Filter = "Text Files | *.txt|RTF Files | *.rtf|C# file | *.cs";
                 saveFileDialog1.Title = $"Save {tabControl1.SelectedTab.Text}";
                 SaveFile(saveFileDialog1);
-
             }
-
         }
-
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (tabControl1.TabCount != 0 && !tabPages[tabControl1.SelectedIndex].SavedOrNot)
@@ -145,18 +141,15 @@ namespace TextEditor
                 tabControl1.Refresh();
             }
         }
-
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Close();
         }
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-
             SaveBeforeClose(out DialogResult result);
             if (result == DialogResult.Cancel)
                 e.Cancel = true;
-
         }
         private void SettingToolStripMenuItem1_Click(object sender, EventArgs e)
         {
