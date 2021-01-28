@@ -352,10 +352,9 @@ namespace TextEditor
             // 
             // Sbutton
             // 
-            this.Sbutton.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.Sbutton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.Sbutton.AutoSize = true;
+            this.Sbutton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.Sbutton.BackColor = System.Drawing.Color.White;
             this.Sbutton.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F, System.Drawing.FontStyle.Strikeout, System.Drawing.GraphicsUnit.Point);
             this.Sbutton.Location = new System.Drawing.Point(12, 162);
@@ -368,10 +367,9 @@ namespace TextEditor
             // 
             // button1
             // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.AutoSize = true;
+            this.button1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.button1.BackColor = System.Drawing.Color.White;
             this.button1.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.button1.Location = new System.Drawing.Point(12, 12);
@@ -384,10 +382,9 @@ namespace TextEditor
             // 
             // Ubutton
             // 
-            this.Ubutton.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.Ubutton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.Ubutton.AutoSize = true;
+            this.Ubutton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.Ubutton.BackColor = System.Drawing.Color.White;
             this.Ubutton.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point);
             this.Ubutton.Location = new System.Drawing.Point(12, 112);
@@ -400,10 +397,9 @@ namespace TextEditor
             // 
             // button2
             // 
-            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.button2.AutoSize = true;
+            this.button2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.button2.BackColor = System.Drawing.Color.White;
             this.button2.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
             this.button2.Location = new System.Drawing.Point(12, 62);
@@ -541,7 +537,6 @@ namespace TextEditor
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
