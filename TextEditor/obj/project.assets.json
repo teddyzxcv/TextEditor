@@ -2,6 +2,15 @@
   "version": 3,
   "targets": {
     ".NETCoreApp,Version=v3.1": {
+      "FCTB/2.16.24": {
+        "type": "package",
+        "compile": {
+          "lib/FastColoredTextBox.dll": {}
+        },
+        "runtime": {
+          "lib/FastColoredTextBox.dll": {}
+        }
+      },
       "Humanizer.Core/2.2.0": {
         "type": "package",
         "dependencies": {
@@ -1726,6 +1735,19 @@
     }
   },
   "libraries": {
+    "FCTB/2.16.24": {
+      "sha512": "7E+vfTh4kV4Cz9hkHehgbmJQh03EdaMWyjY3T9YA4snqI7Bi11zlAvJgyO5HNdkL+Znzas8yyYE9vuF+izxWQw==",
+      "type": "package",
+      "path": "fctb/2.16.24",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "fctb.2.16.24.nupkg.sha512",
+        "fctb.nuspec",
+        "lib/FastColoredTextBox.dll",
+        "lib/FastColoredTextBox.xml"
+      ]
+    },
     "Humanizer.Core/2.2.0": {
       "sha512": "rsYXB7+iUPP8AHgQ8JP2UZI2xK2KhjcdGr9E6zX3CsZaTLCaw8M35vaAJRo1rfxeaZEVMuXeaquLVCkZ7JcZ5Q==",
       "type": "package",
@@ -5676,6 +5698,7 @@
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.1": [
+      "FCTB >= 2.16.24",
       "Microsoft.CodeAnalysis >= 3.8.0",
       "Microsoft.CodeAnalysis.Analyzers >= 3.3.2",
       "Microsoft.CodeAnalysis.CSharp >= 3.8.0",
@@ -5726,6 +5749,10 @@
     "frameworks": {
       "netcoreapp3.1": {
         "dependencies": {
+          "FCTB": {
+            "target": "Package",
+            "version": "[2.16.24, )"
+          },
           "Microsoft.CodeAnalysis": {
             "target": "Package",
             "version": "[3.8.0, )"
@@ -5774,5 +5801,17 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.401\\RuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "已使用“.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8”而不是项目目标框架“.NETCoreApp,Version=v3.1”还原包“FCTB 2.16.24”。此包可能与项目不完全兼容。",
+      "libraryId": "FCTB",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v3.1"
+      ]
+    }
+  ]
 }

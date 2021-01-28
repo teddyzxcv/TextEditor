@@ -9,6 +9,16 @@ using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using System.IO;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Formatting;
+using Microsoft.CodeAnalysis.CSharp.Symbols;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Classification;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Formatting;
+using Microsoft.CodeAnalysis.Text;
+using Microsoft.CodeAnalysis.Host.Mef;
+using Microsoft.CodeAnalysis.Options;
 using System.Xml;
 
 namespace TextEditor
@@ -17,72 +27,26 @@ namespace TextEditor
     {
         static int TabBeforeLine = 0;
         //Do formatting
-        public static List<string> GetFormatLineCode(List<string> code)
+        public static string GetFormatCode(string code)
         {
-            bool InsideBigComment = false;
-            for (int i = 0; i < code.Count; i++)
+            // Create syntax tree, convert to classification.
+            var host = MefHostServices.Create(MefHostServices.DefaultAssemblies);
+            var workspace = new AdhocWorkspace(host);
+            OptionSet options = workspace.Options;
+            options = options.WithChangedOption(CSharpFormattingOptions.NewLinesForBracesInMethods, true);
+            options = options.WithChangedOption(CSharpFormattingOptions.NewLinesForBracesInTypes, true);
+            var sourceText = SourceText.From(code);
+            SyntaxTree tree = CSharpSyntaxTree.ParseText(sourceText);
+            SyntaxNode root = tree.GetRoot();
+            root = Formatter.Format(root, workspace, options);
+            var sb = new StringBuilder();
+            using (var writer = new StringWriter(sb))
             {
-                string codeline = code[i].Trim();
-                string[] sym = { "{", "}", ";" };
-                codeline = codeline.Replace("{", "\n{\n");
-                codeline = codeline.Replace("}", "\n}\n");
-                codeline = codeline.Replace(";", ";\n");
-                List<char> codecharlist = new List<char>(codeline);
-                bool insidecomma = false;
-                bool insidecomment = false;
-                for (int j = 0; j < codecharlist.Count; j++)
-                {
-                    if (j >= 1 && $"{codecharlist[j - 1]}{codecharlist[j]}" == "//")
-                        insidecomment = true;
-                    if (j >= 1 && $"{codecharlist[j - 1]}{codecharlist[j]}" == "/*")
-                        InsideBigComment = true;
-                    if (j >= 1 && $"{codecharlist[j - 1]}{codecharlist[j]}" == "*/")
-                        InsideBigComment = false;
-                    if (codecharlist[j] == '\"')
-                        insidecomma = !insidecomma;
-                    if ((insidecomma || insidecomment || InsideBigComment) && codecharlist[j] == '\n')
-                    {
-                        codecharlist.RemoveAt(j);
-                        j--;
-                    }
-                }
-                code[i] = new string(codecharlist.ToArray());
+                root.WriteTo(writer);
             }
-
+            code = sb.ToString();
+            code = code.Replace("\n\n", "\n");
             return code;
         }
-        public static List<string> GetFormatTabCode(List<string> code)
-        {
-            for (int i = 0; i < code.Count; i++)
-            {
-                string codeline = code[i].Trim();
-                if (codeline.Trim() == "}")
-                    TabBeforeLine--;
-                string indent = new string('\t', TabBeforeLine);
-                codeline = indent + codeline;
-                if (codeline.Trim() == "{")
-                    TabBeforeLine++;
-
-                code[i] = codeline;
-            }
-            TabBeforeLine = 0;
-            return code;
-        }
-        public static List<int> AllIndexesOf(string str, string value)
-        {
-            if (String.IsNullOrEmpty(value))
-                throw new ArgumentException("the string to find may not be empty", "value");
-            List<int> indexes = new List<int>();
-            for (int index = 0; ; index += value.Length)
-            {
-                index = str.IndexOf(value, index);
-                if (index == -1)
-                    return indexes;
-                indexes.Add(index);
-            }
-        }
-
-
-
     }
 }

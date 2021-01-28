@@ -21,6 +21,7 @@ using Microsoft.CodeAnalysis.Formatting;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.CodeAnalysis.Host.Mef;
 using Microsoft.CodeAnalysis.Options;
+using FastColoredTextBoxNS;
 namespace TextEditor
 {
     partial class Form1

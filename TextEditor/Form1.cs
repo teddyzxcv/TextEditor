@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.IO;
+using FastColoredTextBoxNS;
 
 
 
@@ -312,12 +313,11 @@ namespace TextEditor
             if (Path.GetExtension(tabControl1.SelectedTab.Text) == ".cs")
             {
                 int position = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionStart;
-                List<string> CodeLines = new List<string>(tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Text.Split("\n", StringSplitOptions.RemoveEmptyEntries));
-                string formattedCode = String.Join("\n", new List<string>(FormattingCode.GetFormatLineCode(CodeLines)));
-                CodeLines = FormattingCode.GetFormatTabCode(new List<string>(formattedCode.Split("\n", StringSplitOptions.RemoveEmptyEntries)));
-                formattedCode = String.Join("\n", new List<string>(FormattingCode.GetFormatTabCode(CodeLines)));
-                tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Text = formattedCode;
-                tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionStart = position;
+                // Set the font.
+                tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Font = new Font("Courier New", 12);
+                tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Text = FormattingCode.GetFormatCode(tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Text);
+                if (tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Text.Length > position)
+                    tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionStart = position;
             }
         }
         public static void AppendText(RichTextBox box, string text, Color color)
@@ -328,9 +328,9 @@ namespace TextEditor
             box.AppendText(text);
             box.SelectionColor = box.ForeColor;
         }
-        private void SelectedTabBox_TextChanged(object sender, EventArgs e)
+        private void SelectedTabBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            Colorize();
+
         }
     }
 }
