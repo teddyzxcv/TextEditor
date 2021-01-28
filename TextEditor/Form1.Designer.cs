@@ -352,11 +352,15 @@ namespace TextEditor
             // 
             // Sbutton
             // 
+            this.Sbutton.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.Sbutton.AutoSize = true;
             this.Sbutton.BackColor = System.Drawing.Color.White;
             this.Sbutton.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F, System.Drawing.FontStyle.Strikeout, System.Drawing.GraphicsUnit.Point);
-            this.Sbutton.Location = new System.Drawing.Point(12, 141);
+            this.Sbutton.Location = new System.Drawing.Point(12, 162);
             this.Sbutton.Name = "Sbutton";
-            this.Sbutton.Size = new System.Drawing.Size(44, 37);
+            this.Sbutton.Size = new System.Drawing.Size(44, 44);
             this.Sbutton.TabIndex = 0;
             this.Sbutton.Text = "S";
             this.Sbutton.UseVisualStyleBackColor = false;
@@ -364,11 +368,15 @@ namespace TextEditor
             // 
             // button1
             // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.button1.AutoSize = true;
             this.button1.BackColor = System.Drawing.Color.White;
             this.button1.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.button1.Location = new System.Drawing.Point(12, 12);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(44, 37);
+            this.button1.Size = new System.Drawing.Size(44, 44);
             this.button1.TabIndex = 0;
             this.button1.Text = "B";
             this.button1.UseVisualStyleBackColor = false;
@@ -376,11 +384,15 @@ namespace TextEditor
             // 
             // Ubutton
             // 
+            this.Ubutton.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.Ubutton.AutoSize = true;
             this.Ubutton.BackColor = System.Drawing.Color.White;
             this.Ubutton.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point);
-            this.Ubutton.Location = new System.Drawing.Point(12, 98);
+            this.Ubutton.Location = new System.Drawing.Point(12, 112);
             this.Ubutton.Name = "Ubutton";
-            this.Ubutton.Size = new System.Drawing.Size(44, 37);
+            this.Ubutton.Size = new System.Drawing.Size(44, 44);
             this.Ubutton.TabIndex = 0;
             this.Ubutton.Text = "U";
             this.Ubutton.UseVisualStyleBackColor = false;
@@ -388,11 +400,15 @@ namespace TextEditor
             // 
             // button2
             // 
+            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.button2.AutoSize = true;
             this.button2.BackColor = System.Drawing.Color.White;
             this.button2.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
-            this.button2.Location = new System.Drawing.Point(12, 55);
+            this.button2.Location = new System.Drawing.Point(12, 62);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(44, 37);
+            this.button2.Size = new System.Drawing.Size(44, 44);
             this.button2.TabIndex = 0;
             this.button2.Text = "I";
             this.button2.UseVisualStyleBackColor = false;
@@ -525,6 +541,7 @@ namespace TextEditor
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
