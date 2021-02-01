@@ -65,6 +65,8 @@ namespace TextEditor
         }
         /// <summary>
         /// Set the syntax color.
+        /// Writen by reading this link: 
+        /// https://www.codeproject.com/Articles/161871/Fast-Colored-TextBox-for-syntax-highlighting-2
         /// </summary>
         public static void SetSyntaxColor()
         {

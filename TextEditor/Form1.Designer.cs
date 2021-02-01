@@ -65,6 +65,7 @@ namespace TextEditor
             this.FromatToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.SettingToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.TimeMachineStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.Sbutton = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
@@ -100,7 +101,8 @@ namespace TextEditor
             this.editToolStripMenuItem,
             this.FromatToolStripMenuItem1,
             this.SettingToolStripMenuItem1,
-            this.TimeMachineStripMenuItem1});
+            this.TimeMachineStripMenuItem1,
+            this.helpStripMenuItem1});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
@@ -325,6 +327,13 @@ namespace TextEditor
             this.TimeMachineStripMenuItem1.Size = new System.Drawing.Size(188, 35);
             this.TimeMachineStripMenuItem1.Text = "TimeMachine";
             this.TimeMachineStripMenuItem1.Click += new System.EventHandler(this.TimeMachineStripMenuItem1_Click);
+            // 
+            // helpStripMenuItem1
+            // 
+            this.helpStripMenuItem1.Name = "helpStripMenuItem1";
+            this.helpStripMenuItem1.Size = new System.Drawing.Size(88, 35);
+            this.helpStripMenuItem1.Text = "Help";
+            this.helpStripMenuItem1.Click += new System.EventHandler(this.helpStripMenuItem1_Click);
             // 
             // splitContainer1
             // 
@@ -595,6 +604,7 @@ namespace TextEditor
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
         private ToolStripMenuItem ColorizeStripMenuItem1;
         private ToolStripMenuItem compileStripMenuItem1;
+        private ToolStripMenuItem helpStripMenuItem1;
     }
 }
 

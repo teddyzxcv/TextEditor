@@ -18,6 +18,11 @@ namespace TextEditor
 {
     public class CSharpCompiler
     {
+        /// Writen use these link:
+        /// https://laurentkempe.com/2019/02/18/dynamically-compile-and-run-code-using-dotNET-Core-3.0/
+        /// https://stackoverflow.com/questions/826398/is-it-possible-to-dynamically-compile-and-execute-c-sharp-code-fragments
+        /// http://www.blackwasp.co.uk/RuntimeCompilation.aspx
+        /// https://www.youtube.com/watch?v=Kyd-5UzzU2A
 
         public static List<string> ComplieCode(string code)
         {

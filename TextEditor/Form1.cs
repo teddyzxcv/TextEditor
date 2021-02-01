@@ -167,7 +167,7 @@ namespace TextEditor
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Check is saved or not.
-            if (tabControl1.TabCount != 0 )
+            if (tabControl1.TabCount != 0)
             {
                 SaveFile();
                 tabPages[tabControl1.SelectedIndex].SavedOrNot = true;
@@ -595,6 +595,18 @@ namespace TextEditor
             catch
             {
                 MessageBox.Show("Error! Unknow Error! Can't compile this code!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void helpStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                OpenFile("Helper.rtf");
+            }
+            catch
+            {
+                MessageBox.Show("Something go wrong, plz restart the programm", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }
