@@ -559,9 +559,43 @@ namespace TextEditor
                 this.Text = tabControl1.SelectedTab.Text;
             }
         }
+        /// <summary>
+        /// Switch the formatting option.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
             SwitchStyleOption();
+        }
+        /// <summary>
+        /// Compile the code.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+
+        private void compileStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                List<string> errors = new List<string>();
+                if (tabControl1.SelectedTab != null && tabControl1.SelectedTab.Controls.OfType<FastColoredTextBox>().Last() != null)
+                    errors = CSharpCompiler.ComplieCode(tabControl1.SelectedTab.Controls.OfType<FastColoredTextBox>().Last().Text);
+                Form f = new Form();
+                f.Width = 1000;
+                f.Height = 500;
+                f.Text = "Errors";
+                TextBox textBox = new TextBox();
+                ListBox listBox = new ListBox();
+                listBox.Dock = DockStyle.Fill;
+                listBox.Items.AddRange(errors.ToArray());
+                f.Controls.Add(listBox);
+                f.Show();
+            }
+            catch
+            {
+                MessageBox.Show("Error! Unknow Error! Can't compile this code!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
