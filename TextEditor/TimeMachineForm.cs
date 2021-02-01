@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-using System.Configuration;
 using System.Linq;
-using System.Threading.Tasks;
 using System.IO;
 using System.Xml;
 namespace TextEditor
@@ -17,7 +12,9 @@ namespace TextEditor
         List<FileJournal> journal = FileJournal.LoadFileInfo();
         string PathToJournal = Path.GetRelativePath("TextEditor\\bin\\Debug\\netcoreapp3.1", "TextEditor\\Journal");
 
-
+        /// <summary>
+        /// Initialize the form.
+        /// </summary>
         public TimeMachineForm()
         {
             InitializeComponent();
@@ -30,7 +27,11 @@ namespace TextEditor
             if (listBox1.Items.Count != 0)
                 listBox1.SelectedIndex = 0;
         }
-
+        /// <summary>
+        /// Select one file.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void listBox1_Click(object sender, EventArgs e)
         {
             if (listBox1.SelectedItem != null)
@@ -40,6 +41,11 @@ namespace TextEditor
                 listBox2.Items.AddRange(journal[listBox1.SelectedIndex].ChangeTime.ToArray());
             }
         }
+        /// <summary>
+        /// Double click to restore the document.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
 
         private void listBox2_DoubleClick(object sender, EventArgs e)
         {
@@ -61,6 +67,11 @@ namespace TextEditor
                 var result = MessageBox.Show($"Please close {journal[listBox1.SelectedIndex].filePosition} to rollback this file", "Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
             }
         }
+        /// <summary>
+        /// Change list2 when change selection in the list1.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -74,17 +85,27 @@ namespace TextEditor
         }
     }
 
+    /// <summary>
+    /// Save and change file to do rollback.
+    /// </summary>
     public class FileJournal
     {
         private static Random random = new Random();
         static string PathToJournal = Path.GetRelativePath("TextEditor\\bin\\Debug\\netcoreapp3.1", "TextEditor\\Journal\\Journal.xml");
-
+        /// <summary>
+        /// Get random 10 char string to get folder name.
+        /// </summary>
+        /// <returns></returns>
         public static string RandomString()
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             return new string(Enumerable.Repeat(chars, 10)
               .Select(s => s[random.Next(s.Length)]).ToArray());
         }
+        /// <summary>
+        /// Get file info from Xml document (/Journal/Journal.xml).
+        /// </summary>
+        /// <returns></returns>
         public static List<FileJournal> LoadFileInfo()
         {
             XmlDocument doc = new XmlDocument();
@@ -104,8 +125,13 @@ namespace TextEditor
                 }
             }
             return journal;
-
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="folderName"></param>
+        /// <param name="name"></param>
         public static void AddNewNode(string path, string folderName, string name)
         {
             XmlDocument doc = new XmlDocument();
@@ -126,11 +152,19 @@ namespace TextEditor
             root.AppendChild(newFile);
             doc.Save(PathToJournal);
         }
+        /// <summary>
+        /// Parameter in the class.
+        /// </summary>
+        /// <value></value>
         public string folderName { get; set; }
         public string fileName { get; set; }
         public string filePosition { get; set; }
         private List<string> changetime = new List<string>();
 
+        /// <summary>
+        /// Change time record.
+        /// </summary>
+        /// <value></value>
         public List<string> ChangeTime
         {
             get
@@ -142,7 +176,10 @@ namespace TextEditor
                 changetime = value;
             }
         }
-
+        /// <summary>
+        /// Add record to journal.
+        /// </summary>
+        /// <param name="Address"></param>
         public static void AddRecord(string Address)
         {
             XmlDocument doc = new XmlDocument();
@@ -155,6 +192,9 @@ namespace TextEditor
             selectedFile.SelectSingleNode("ChangeTime").AppendChild(newRecrod);
             doc.Save(PathToJournal);
         }
+        /// <summary>
+        /// Delete all record in the journal.xml.
+        /// </summary>
 
         public static void DeleteAllRecord()
         {
@@ -169,21 +209,9 @@ namespace TextEditor
             }
             MessageBox.Show("All save deleted!", "Done", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
-
-
-        public void RemoveRecord(string record)
-        {
-            changetime.Remove(record);
-        }
         public override string ToString()
         {
             return $"{fileName}";
         }
-        public string[] GetRecord()
-        {
-            return changetime.ToArray();
-        }
-
-
     }
 }

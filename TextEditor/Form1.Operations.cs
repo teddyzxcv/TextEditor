@@ -1,26 +1,12 @@
 using System;
 using System.Configuration;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Formatting;
-
-using Microsoft.CodeAnalysis.CSharp.Symbols;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Classification;
-using Microsoft.CodeAnalysis;
-
-using Microsoft.CodeAnalysis.Formatting;
-using Microsoft.CodeAnalysis.Text;
-using Microsoft.CodeAnalysis.Host.Mef;
-using Microsoft.CodeAnalysis.Options;
 using FastColoredTextBoxNS;
 namespace TextEditor
 {
@@ -28,8 +14,15 @@ namespace TextEditor
     {
 
 
+        /// <summary>
+        /// Save the all information about opening tab.
+        /// </summary>
+        /// <typeparam name="TabF"></typeparam>
+        /// <returns></returns>
         List<TabF> tabPages = new List<TabF>();
-
+        /// <summary>
+        /// Open file by dialog.
+        /// </summary>
         private void OpenFile()
         {
             OpenFileDialog FileDialog1 = new OpenFileDialog();
@@ -54,6 +47,10 @@ namespace TextEditor
 
             }
         }
+        /// <summary>
+        /// Open file by path.
+        /// </summary>
+        /// <param name="Path"></param>
         private void OpenFile(string Path)
         {
             try
@@ -74,6 +71,10 @@ namespace TextEditor
                 tabControl1.TabPages.RemoveAt(tabControl1.TabCount - 1);
             }
         }
+        /// <summary>
+        /// Save file by dialog.
+        /// </summary>
+        /// <param name="sfd"></param>
 
         private void SaveFile(SaveFileDialog sfd)
         {
@@ -90,6 +91,10 @@ namespace TextEditor
                 var result = MessageBox.Show($"File {sfd.FileName} can not be opened for some reason, try other file", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        /// <summary>
+        /// Save all file before close.
+        /// </summary>
+        /// <param name="result"></param>
         private void SaveBeforeClose(out DialogResult result)
         {
             //tabPages.Select(e => e.PathToFile)
@@ -106,6 +111,7 @@ namespace TextEditor
                     result = MessageBox.Show($"Would you like to Save {tabControl1.TabPages[0].Text} before close this Tab?", "Confirm", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                     if (result == DialogResult.Yes)
                     {
+                        // Save the file and close it.
                         TabWidthList.Remove(this.tabControl1.TabPages[0].Text.Length * 18);
                         SaveFile();
                         tabPages[0].SavedOrNot = true;
@@ -113,29 +119,41 @@ namespace TextEditor
                         tabPages.RemoveAt(0);
                         this.tabControl1.TabPages.RemoveAt(0);
                         RefreshTabSize();
+                        SwitchStyleOption();
                     }
                     else if (result == DialogResult.No)
                     {
+                        // Close the taab with out saving it.
                         TabWidthList.Remove(this.tabControl1.TabPages[0].Text.Length * 18);
                         this.tabControl1.TabPages.RemoveAt(0);
                         tabPages.RemoveAt(0);
                         RefreshTabSize();
+                        SwitchStyleOption();
+
                     }
                     else if (result == DialogResult.Cancel)
                     {
+                        // Just cancel.
+                        SwitchStyleOption();
                         break;
                     }
                 }
                 else
                 {
+                    //  Just remove.
                     TabWidthList.Remove(this.tabControl1.TabPages[0].Text.Length * 18);
                     this.tabControl1.TabPages.RemoveAt(0);
                     tabPages.RemoveAt(0);
                     RefreshTabSize();
+                    SwitchStyleOption();
+
                 }
             }
 
         }
+        /// <summary>
+        /// Save the opened tab file.
+        /// </summary>
         private void SaveFile()
         {
             try
@@ -150,17 +168,27 @@ namespace TextEditor
 
             }
         }
+        /// <summary>
+        /// Refresh tab size by name of the file.
+        /// </summary>
+        /// <param name="FileName"></param>
         private void RefreshTabSize(string FileName)
         {
             TabWidthList.Add(FileName.Length * 18);
             int MaxTabWidth = TabWidthList.Max();
             this.tabControl1.ItemSize = new Size(MaxTabWidth, 36);
         }
+        /// <summary>
+        /// Refresh tab size.
+        /// </summary>
         private void RefreshTabSize()
         {
             int MaxTabWidth = TabWidthList.Max();
             this.tabControl1.ItemSize = new Size(MaxTabWidth, 36);
         }
+        /// <summary>
+        /// Save all opened file.
+        /// </summary>
         private void SaveAll()
         {
             for (int i = 0; i < this.tabControl1.TabPages.Count; i++)
@@ -187,13 +215,18 @@ namespace TextEditor
                 this.Text = tabControl1.SelectedTab.Text;
         }
 
-
+        /// <summary>
+        /// Create new tab.
+        /// </summary>
+        /// <param name="FileName"></param>
+        /// <returns></returns>
         private TabPage CreateNewTab(string FileName)
         {
             string fileName = FileName.Substring(FileName.LastIndexOf(Path.DirectorySeparatorChar) + 1);
             TabPage newTab = new TabPage(fileName);
             if (Path.GetExtension(fileName) == ".cs")
             {
+                // Create new fast colored text box.
                 FastColoredTextBox newTextBox = new FastColoredTextBox();
                 newTextBox.Location = new Point(4, 4);
                 newTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -213,6 +246,7 @@ namespace TextEditor
             }
             else
             {
+                // Create new rich text box.
                 RichTextBox newTextBox = new RichTextBox();
                 newTextBox.Location = new Point(4, 4);
                 newTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -227,6 +261,7 @@ namespace TextEditor
                 newTextBox.TextChanged += new System.EventHandler(this.SelectedTabRichBox_TextChanged);
                 newTab.Controls.Add(newTextBox);
             }
+            // Add to the tabcontrol.
             RefreshTabSize(fileName);
             TabF newT = new TabF();
             newT.PathToFile = FileName;
@@ -236,6 +271,9 @@ namespace TextEditor
             this.Text = fileName;
             return newTab;
         }
+        /// <summary>
+        /// Open all old file from last opening which are saved in the App.config.
+        /// </summary>
         private void OpenOldFile()
         {
             try
@@ -255,6 +293,9 @@ namespace TextEditor
 
             }
         }
+        /// <summary>
+        /// Set all setting.
+        /// </summary>
         private void SetSetting()
         {
             try
@@ -293,6 +334,9 @@ namespace TextEditor
             }
 
         }
+        /// <summary>
+        /// Do cut.
+        /// </summary>
         private void CutAct()
         {
             if (this.tabControl1.TabCount != 0)
@@ -302,9 +346,10 @@ namespace TextEditor
                     tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().Cut();
                 else
                     tabControl1.SelectedTab.Controls.OfType<FastColoredTextBox>().Last().Cut();
-
-
         }
+        /// <summary>
+        /// Do copy.
+        /// </summary>
         private void CopyAct()
         {
             if (this.tabControl1.TabCount != 0)
@@ -315,6 +360,9 @@ namespace TextEditor
                     tabControl1.SelectedTab.Controls.OfType<FastColoredTextBox>().Last().Copy();
 
         }
+        /// <summary>
+        /// Do paste.
+        /// </summary>
         private void PasteAct()
         {
             if (this.tabControl1.TabCount != 0)
@@ -326,6 +374,9 @@ namespace TextEditor
                     tabControl1.SelectedTab.Controls.OfType<FastColoredTextBox>().Last().Paste();
 
         }
+        /// <summary>
+        /// Select all.
+        /// </summary>
         private void SelectAllAct()
         {
             if (this.tabControl1.TabCount != 0)
@@ -336,6 +387,9 @@ namespace TextEditor
                     tabControl1.SelectedTab.Controls.OfType<FastColoredTextBox>().Last().SelectAll();
 
         }
+        /// <summary>
+        /// Make selection bold.
+        /// </summary>
         private void BoldSelection()
         {
             if (this.tabControl1.TabCount != 0)
@@ -362,6 +416,9 @@ namespace TextEditor
                     }
                 }
         }
+        /// <summary>
+        /// Make selection italic.
+        /// </summary>
         private void ItalicSelection()
         {
             if (this.tabControl1.TabCount != 0)
@@ -390,6 +447,9 @@ namespace TextEditor
 
                 }
         }
+        /// <summary>
+        /// Make selection underline.
+        /// </summary>
         private void UnderlineSelection()
         {
             if (this.tabControl1.TabCount != 0)
@@ -449,7 +509,10 @@ namespace TextEditor
 
             }
         }
-
+        /// <summary>
+        /// Open file by checking the extention.
+        /// </summary>
+        /// <param name="filepath"></param>
         private void OpenFileByExtension(string filepath)
         {
 
@@ -460,14 +523,17 @@ namespace TextEditor
                 case (".rtf"):
                     rb = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last();
                     rb.LoadFile(filepath, RichTextBoxStreamType.RichText);
+                    SwitchStyleOption();
                     break;
                 case (".txt"):
                     rb = tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last();
                     rb.LoadFile(filepath, RichTextBoxStreamType.PlainText);
+                    SwitchStyleOption();
                     break;
                 case (".cs"):
                     var enc = EncodingDetector.DetectTextFileEncoding(filepath);
                     fctb = tabControl1.SelectedTab.Controls.OfType<FastColoredTextBox>().Last();
+                    SwitchStyleOption();
                     if (enc != null)
                         fctb.OpenFile(filepath, enc);
                     else
@@ -477,7 +543,9 @@ namespace TextEditor
 
         }
 
-
+        /// <summary>
+        /// Reopen all file.
+        /// </summary>
         private void ReopenAll()
         {
             int indexSelected = tabControl1.SelectedIndex;
@@ -488,6 +556,9 @@ namespace TextEditor
             tabControl1.SelectedIndex = indexSelected;
 
         }
+        /// <summary>
+        /// Make selection strikeout.
+        /// </summary>
 
         private void StrikeoutSelection()
         {
@@ -508,7 +579,6 @@ namespace TextEditor
                         Sbutton.BackColor = Color.Gray;
                         RStrikeStripMenuItem4.BackColor = Color.Gray;
                         fs |= FontStyle.Strikeout;
-
                     }
                     if (tabControl1.SelectedTab.Controls.OfType<RichTextBox>().Last().SelectionFont != null)
                     {
@@ -516,6 +586,9 @@ namespace TextEditor
                     }
                 }
         }
+        /// <summary>
+        /// Switch style .cs and just text file.
+        /// </summary>
 
         private void SwitchStyleOption()
         {
@@ -530,7 +603,6 @@ namespace TextEditor
                 RStrikeStripMenuItem4.Visible = false;
                 RItalicStripMenuItem2.Visible = false;
                 FromatToolStripMenuItem1.Visible = false;
-
             }
             else
             {
@@ -543,54 +615,7 @@ namespace TextEditor
                 RStrikeStripMenuItem4.Visible = true;
                 RItalicStripMenuItem2.Visible = true;
                 FromatToolStripMenuItem1.Visible = true;
-
             }
         }
-
-
-
-        private static Color GetColorFor(string classificatioName)
-        {
-            switch (classificatioName)
-            {
-                case ClassificationTypeNames.InterfaceName:
-                case ClassificationTypeNames.EnumName:
-                case ClassificationTypeNames.Keyword:
-                    return Color.DarkCyan;
-
-                case ClassificationTypeNames.ClassName:
-                case ClassificationTypeNames.StructName:
-                    return Color.DarkOrange;
-
-                case ClassificationTypeNames.Identifier:
-                    return Color.DarkSlateGray;
-
-                case ClassificationTypeNames.Comment:
-                    return Color.DarkGreen;
-
-                case ClassificationTypeNames.StringLiteral:
-                case ClassificationTypeNames.VerbatimStringLiteral:
-                    return Color.DarkRed;
-
-                case ClassificationTypeNames.Punctuation:
-                    return Color.DarkGray;
-
-                case ClassificationTypeNames.WhiteSpace:
-                    return Color.Black;
-
-                case ClassificationTypeNames.NumericLiteral:
-                    return Color.DarkOrange;
-
-                case ClassificationTypeNames.PreprocessorKeyword:
-                    return Color.DarkMagenta;
-                case ClassificationTypeNames.PreprocessorText:
-                    return Color.DarkGreen;
-
-                default:
-                    return Color.DarkSlateGray;
-            }
-
-        }
-
     }
 }

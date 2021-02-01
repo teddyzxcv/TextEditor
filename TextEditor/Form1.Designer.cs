@@ -52,7 +52,6 @@ namespace TextEditor
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.formattingStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.ColorizeStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.redoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -207,7 +206,6 @@ namespace TextEditor
             // 
             this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.formattingStripMenuItem1,
-            this.ColorizeStripMenuItem1,
             this.toolStripSeparator7,
             this.undoToolStripMenuItem,
             this.redoToolStripMenuItem,
@@ -228,13 +226,6 @@ namespace TextEditor
             this.formattingStripMenuItem1.Size = new System.Drawing.Size(427, 44);
             this.formattingStripMenuItem1.Text = "Formatting Code";
             this.formattingStripMenuItem1.Click += new System.EventHandler(this.formattingStripMenuItem1_Click);
-            // 
-            // ColorizeStripMenuItem1
-            // 
-            this.ColorizeStripMenuItem1.Name = "ColorizeStripMenuItem1";
-            this.ColorizeStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D)));
-            this.ColorizeStripMenuItem1.Size = new System.Drawing.Size(427, 44);
-            this.ColorizeStripMenuItem1.Text = "Colorize";
             // 
             // toolStripSeparator7
             // 

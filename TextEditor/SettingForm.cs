@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Configuration;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-using System.IO;
 
 
 
@@ -14,6 +9,9 @@ namespace TextEditor
 {
     public partial class SettingForm : Form
     {
+        /// <summary>
+        ///  Initialize setting form.
+        /// </summary>
         public SettingForm()
         {
             InitializeComponent();
@@ -23,7 +21,11 @@ namespace TextEditor
             this.StartPosition = FormStartPosition.CenterScreen;
         }
 
-
+        /// <summary>
+        /// Save all when click save.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
 
         private void Save_Click(object sender, EventArgs e)
         {
@@ -44,6 +46,11 @@ namespace TextEditor
             FormattingCode.SetSyntaxColor();
             this.Close();
         }
+        /// <summary>
+        /// Setting setting form.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SettingForm_Load(object sender, EventArgs e)
         {
             this.numericUpDown1.Value = int.Parse(ConfigurationManager.AppSettings["AutosaveTime"]);
@@ -59,11 +66,21 @@ namespace TextEditor
             this.button7.BackColor = Color.FromArgb(int.Parse(ConfigurationManager.AppSettings["CSharpStringStyle"]));
             this.button8.BackColor = Color.FromArgb(int.Parse(ConfigurationManager.AppSettings["CSharpVariableStyle"]));
         }
+        /// <summary>
+        /// Clean all file journal.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
 
         private void Cleanbutton1_Click(object sender, EventArgs e)
         {
             FileJournal.DeleteAllRecord();
         }
+        /// <summary>
+        /// Comment color set.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -72,6 +89,11 @@ namespace TextEditor
             cd.ShowDialog();
             button1.BackColor = cd.Color;
         }
+        /// <summary>
+        /// Keyword color set.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
 
         private void button2_Click(object sender, EventArgs e)
         {
@@ -80,6 +102,11 @@ namespace TextEditor
             cd.ShowDialog();
             button2.BackColor = cd.Color;
         }
+        /// <summary>
+        /// Attribute color set.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
 
         private void button3_Click(object sender, EventArgs e)
         {
@@ -88,6 +115,11 @@ namespace TextEditor
             cd.ShowDialog();
             button3.BackColor = cd.Color;
         }
+        /// <summary>
+        /// Class name color set.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
 
         private void button4_Click(object sender, EventArgs e)
         {
@@ -96,6 +128,11 @@ namespace TextEditor
             cd.ShowDialog();
             button4.BackColor = cd.Color;
         }
+        /// <summary>
+        /// Comment tag color set.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
 
         private void button5_Click(object sender, EventArgs e)
         {
@@ -104,6 +141,11 @@ namespace TextEditor
             cd.ShowDialog();
             button5.BackColor = cd.Color;
         }
+        /// <summary>
+        /// Number color set.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
 
         private void button6_Click(object sender, EventArgs e)
         {
@@ -112,6 +154,11 @@ namespace TextEditor
             cd.ShowDialog();
             button6.BackColor = cd.Color;
         }
+        /// <summary>
+        /// String color set.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
 
         private void button7_Click(object sender, EventArgs e)
         {
@@ -120,7 +167,11 @@ namespace TextEditor
             cd.ShowDialog();
             button7.BackColor = cd.Color;
         }
-
+        /// <summary>
+        /// Variable color set.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button8_Click(object sender, EventArgs e)
         {
             ColorDialog cd = new ColorDialog();

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "h/F6H3ocYad9Ly9mdNegidVWOoC8o+r7wKg6nce6mia1BMaro4UiHKxu5f5HWEb6Ue0BRStyRNVs/RULuObZHg==",
+  "dgSpecHash": "cDb7MDU+FdPV1iCizaqG7Uxh/dFXveatLpXDrwCfbclyEKArVAF40Eie4eiJbLdkeeH1AluGi2w0B1sv6QorgQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\teddyzxcv\\Documents\\GitHub\\TextEditor\\TextEditor\\TextEditor.csproj",
   "expectedPackageFiles": [
@@ -8,7 +8,7 @@
     "C:\\Users\\teddyzxcv\\.nuget\\packages\\humanizer.core\\2.2.0\\humanizer.core.2.2.0.nupkg.sha512",
     "C:\\Users\\teddyzxcv\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.1\\microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
     "C:\\Users\\teddyzxcv\\.nuget\\packages\\microsoft.codeanalysis\\3.8.0\\microsoft.codeanalysis.3.8.0.nupkg.sha512",
-    "C:\\Users\\teddyzxcv\\.nuget\\packages\\microsoft.codeanalysis.analyzers\\3.3.2\\microsoft.codeanalysis.analyzers.3.3.2.nupkg.sha512",
+    "C:\\Users\\teddyzxcv\\.nuget\\packages\\microsoft.codeanalysis.analyzers\\3.0.0\\microsoft.codeanalysis.analyzers.3.0.0.nupkg.sha512",
     "C:\\Users\\teddyzxcv\\.nuget\\packages\\microsoft.codeanalysis.common\\3.8.0\\microsoft.codeanalysis.common.3.8.0.nupkg.sha512",
     "C:\\Users\\teddyzxcv\\.nuget\\packages\\microsoft.codeanalysis.csharp\\3.8.0\\microsoft.codeanalysis.csharp.3.8.0.nupkg.sha512",
     "C:\\Users\\teddyzxcv\\.nuget\\packages\\microsoft.codeanalysis.csharp.workspaces\\3.8.0\\microsoft.codeanalysis.csharp.workspaces.3.8.0.nupkg.sha512",

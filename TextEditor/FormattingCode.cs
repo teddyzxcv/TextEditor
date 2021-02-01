@@ -1,32 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+﻿
 using System.Text;
-using System.Windows.Forms;
-using System.Configuration;
-using System.Linq;
-using System.Threading.Tasks;
+
 using System.IO;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Formatting;
-using Microsoft.CodeAnalysis.CSharp.Symbols;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Classification;
+
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Formatting;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.CodeAnalysis.Host.Mef;
 using Microsoft.CodeAnalysis.Options;
 
-using System.Xml;
 using FastColoredTextBoxNS;
 
 namespace TextEditor
 {
     class FormattingCode
     {
+        // All style parameter.
         static int TabBeforeLine = 0;
         public static SyntaxHighlighter CSharpSyntaxHighlighter { get; set; }
         public static Style CSharpKeywordStyle { get; set; }
@@ -46,7 +37,11 @@ namespace TextEditor
             CSharpSyntaxHighlighter = GetSyntaxColor(CSharpSyntaxHighlighter);
         }
 
-        //Do formatting
+        /// <summary>
+        /// Do formatting.
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
         public static string GetFormatCode(string code)
         {
             // Create syntax tree, convert to classification.
@@ -68,10 +63,18 @@ namespace TextEditor
             code = code.Replace("\n\n", "\n");
             return code;
         }
+        /// <summary>
+        /// Set the syntax color.
+        /// </summary>
         public static void SetSyntaxColor()
         {
             CSharpSyntaxHighlighter = GetSyntaxColor(CSharpSyntaxHighlighter);
         }
+        /// <summary>
+        /// Get all syntax setting.
+        /// </summary>
+        /// <param name="shl"></param>
+        /// <returns></returns>
 
         public static SyntaxHighlighter GetSyntaxColor(SyntaxHighlighter shl)
         {
