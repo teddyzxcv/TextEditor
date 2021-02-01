@@ -196,7 +196,7 @@ namespace TextEditor
                 try
                 {
                     //Save file
-                    if (!tabPages[i].SavedOrNot && tabControl1.TabCount != 0)
+                    if ( tabControl1.TabCount != 0)
                     {
                         SaveFileByExtension(tabPages[i].PathToFile, Path.ChangeExtension(tabPages[i].PathToFile, ""), tabControl1.TabPages[i]);
                         tabPages[i].SavedOrNot = true;
@@ -488,7 +488,7 @@ namespace TextEditor
             FastColoredTextBox fctb = new FastColoredTextBox();
 
 
-            switch (Path.GetExtension(filepath))
+            switch (Path.GetExtension(filepath).Trim())
             {
                 case (".rtf"):
                     rb = tb.Controls.OfType<RichTextBox>().Last();

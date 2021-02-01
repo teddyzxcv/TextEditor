@@ -121,7 +121,7 @@ namespace TextEditor
         {
             // New File dialog.
             SaveFileDialog saveFileDialog1 = new SaveFileDialog();
-            saveFileDialog1.Filter = "Text Files | *.txt | RTF Files | *.rtf";
+            saveFileDialog1.Filter = "Text Files | *.txt| RTF Files | *.rtf";
             saveFileDialog1.Title = "Create an Text File";
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
@@ -151,7 +151,7 @@ namespace TextEditor
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Just like in save.
-            if (tabControl1.TabCount != 0 && !tabPages[tabControl1.SelectedIndex].SavedOrNot)
+            if (tabControl1.TabCount != 0)
             {
                 SaveFileDialog saveFileDialog1 = new SaveFileDialog();
                 saveFileDialog1.Filter = "Text Files | *.txt|RTF Files | *.rtf|C# file | *.cs";
@@ -167,7 +167,7 @@ namespace TextEditor
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Check is saved or not.
-            if (tabControl1.TabCount != 0 && !tabPages[tabControl1.SelectedIndex].SavedOrNot)
+            if (tabControl1.TabCount != 0 )
             {
                 SaveFile();
                 tabPages[tabControl1.SelectedIndex].SavedOrNot = true;
